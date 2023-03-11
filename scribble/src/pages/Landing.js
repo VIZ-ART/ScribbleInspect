@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../assets/images/logo.svg";
-import main from "../assets/images/main.svg";
+import main from "../assets/images/gazing.svg";
 import Wrapper from "../assets/wrappers/LandingPage";
 
 const Landing = () => {
@@ -16,8 +16,7 @@ const Landing = () => {
           </h1>
           <p>
             Your handwriting, our expertise: Delivering superior evaluation
-            services for your assignments! Revolutionize your grading process
-            with our advanced software. Simply upload handwritten assignments
+            services for your assignments!Simply upload handwritten assignments
             and receive objective, accurate grades instantly. Try it now and
             save time while ensuring fair and consistent grading.
           </p>
