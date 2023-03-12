@@ -1,5 +1,5 @@
 import React from "react";
-import main from "../assets/images/gazing.svg";
+import gazing from "../assets/images/gazing.svg";
 import Wrapper from "../assets/wrappers/LandingPage";
 import { Logo } from "../components";
 
@@ -23,8 +23,8 @@ const Landing = () => {
           <button className="btn btn-hero">Login/Register</button>
         </div>
         <img
-          src={main}
-          alt="A student climbing to success with education"
+          src={gazing}
+          alt="A student gazing at a document"
           className="img main-img"
         />
       </div>
