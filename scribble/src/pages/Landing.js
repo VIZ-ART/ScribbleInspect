@@ -2,6 +2,7 @@ import React from "react";
 import gazing from "../assets/images/gazing.svg";
 import Wrapper from "../assets/wrappers/LandingPage";
 import { Logo } from "../components";
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
@@ -20,7 +21,9 @@ const Landing = () => {
             and receive objective, accurate grades instantly. Try it now and
             save time while ensuring fair and consistent grading.
           </p>
-          <button className="btn btn-hero">Login/Register</button>
+          <Link to="/register" className="btn btn-hero">
+            Login/Register
+          </Link>
         </div>
         <img
           src={gazing}
