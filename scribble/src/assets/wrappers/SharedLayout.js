@@ -1,9 +1,10 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.section`
   .dashboard {
     display: grid;
     grid-template-columns: 1fr;
+    z-index: 1;
   }
   .dashboard-page {
     width: 90vw;
@@ -18,5 +19,5 @@ const Wrapper = styled.section`
       width: 90%;
     }
   }
-`
-export default Wrapper
+`;
+export default Wrapper;

@@ -98,18 +98,6 @@ function Register() {
             </select>
           </div>
         )}
-
-        {/* {values.isMember || (
-          <FormSelectRow
-            type="select"
-            name="user"
-            value={values.user}
-            onChange={handleChange}
-            options={("Student", "Teacher")}
-            className="form-row"
-          />
-        )} */}
-
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           {isLoading ? "Loading.." : "Submit"}
         </button>
