@@ -1035,7 +1035,7 @@ const initialState = {
 };
 
 reducers: {
-    toggleSidebar: (state) => {
+    toggleSidebar: (state) => {;
       state.isSidebarOpen = !state.isSidebarOpen;
     },
   },
