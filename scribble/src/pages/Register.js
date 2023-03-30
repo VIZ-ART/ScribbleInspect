@@ -40,7 +40,12 @@ function Register() {
       return;
     }
     dispatch(
-      registerUser({ name: name, email: email, password: password, user: user })
+      registerUser({
+        name: name,
+        email: email,
+        password: password,
+        user: user,
+      })
     );
   };
 
