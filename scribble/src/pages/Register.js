@@ -8,10 +8,10 @@ import { loginUser, registerUser } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
-  name: "",
+  userName: "",
   email: "",
   password: "",
-  user: "Student",
+  userType: "Student",
   isMember: true,
 };
 
@@ -30,8 +30,8 @@ function Register() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { name, email, password, user, isMember } = values;
-    if (!email || !password || (!isMember && !name)) {
+    const { userName, email, password, userType, isMember } = values;
+    if (!email || !password || (!isMember && !userName)) {
       toast.error("Please fill out all fields!");
       return;
     }
@@ -41,10 +41,10 @@ function Register() {
     }
     dispatch(
       registerUser({
-        name: name,
+        userName: userName,
         email: email,
         password: password,
-        user: user,
+        userType: userType,
       })
     );
   };
@@ -69,8 +69,8 @@ function Register() {
         {values.isMember || (
           <FormRow
             type="text"
-            name="name"
-            value={values.name}
+            name="userName"
+            value={values.userName}
             handleChange={handleChange}
           />
         )}
@@ -93,8 +93,8 @@ function Register() {
             </label>
             <select
               type="select"
-              name="user"
-              value={values.user}
+              name="userType"
+              value={values.userType}
               onChange={handleChange}
               className="form-row"
             >

@@ -1377,71 +1377,70 @@ export default BigSidebar;
 Profile.js
 
 ```js
-import { useState } from 'react';
-import { FormRow } from '../../components';
-import Wrapper from '../../assets/wrappers/DashboardFormPage';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-
+import { useState } from "react";
+import { FormRow } from "../../components";
+import Wrapper from "../../assets/wrappers/DashboardFormPage";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const { isLoading, user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
-const [userData,setUserData] = useState({
-  name:user?.name ||''
-  email:user?.email ||''
-  lastName:user?.lastName ||''
-  location:user?.location ||''
-})
+  const [userData, setUserData] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    lastName: user?.lastName || "",
+    location: user?.location || "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-        const { name, email, lastName, location } = userData;
+    const { name, email, lastName, location } = userData;
 
     if (!name || !email || !lastName || !location) {
-      toast.error('Please Fill Out All Fields');
+      toast.error("Please Fill Out All Fields");
       return;
     }
   };
-const handleChange = (e) =>{
-  const name = e.target.name
-  const value = e.target.value
-  setUserData({...userData,[name]:value})
-}
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setUserData({ ...userData, [name]: value });
+  };
   return (
     <Wrapper>
-      <form className='form' onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
         <h3>profile</h3>
 
-        <div className='form-center'>
+        <div className="form-center">
           <FormRow
-            type='text'
-            name='name'
+            type="text"
+            name="name"
             value={userData.name}
             handleChange={handleChange}
           />
           <FormRow
-            type='text'
-            labelText='last name'
-            name='lastName'
+            type="text"
+            labelText="last name"
+            name="lastName"
             value={userData.lastName}
             handleChange={handleChange}
           />
           <FormRow
-            type='email'
-            name='email'
+            type="email"
+            name="email"
             value={userData.email}
             handleChange={handleChange}
           />
           <FormRow
-            type='text'
-            name='location'
+            type="text"
+            name="location"
             value={userData.location}
             handleChange={handleChange}
           />
-          <button className='btn btn-block' type='submit' disabled={isLoading}>
-            {isLoading ? 'Please Wait...' : 'save changes'}
+          <button className="btn btn-block" type="submit" disabled={isLoading}>
+            {isLoading ? "Please Wait..." : "save changes"}
           </button>
         </div>
       </form>
@@ -1450,8 +1449,6 @@ const handleChange = (e) =>{
 };
 
 export default Profile;
-
-
 ```
 
 #### 47) Update User - Complete

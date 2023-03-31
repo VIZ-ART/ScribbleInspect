@@ -20,12 +20,15 @@ export const registerUser = createAsyncThunk(
     try {
       const resp = await customFetch.post("/users/register", {
         ...user,
-        user_type: user.user,
+        name: user.userName,
+        user_type: user.userType,
       });
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response.data.email?.shift() ||
+        error.response.data.name?.shift() ||
+          error.response.data.user_type?.shift() ||
+          error.response.data.email?.shift() ||
           error.response.data.password?.shift()
       );
     }
