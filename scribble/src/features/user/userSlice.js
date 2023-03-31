@@ -22,10 +22,12 @@ export const registerUser = createAsyncThunk(
         ...user,
         user_type: user.user,
       });
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      return thunkAPI.rejectWithValue(
+        error.response.data.email?.shift() ||
+          error.response.data.password?.shift()
+      );
     }
   }
 );
@@ -36,34 +38,21 @@ export const loginUser = createAsyncThunk(
     try {
       const tokenResp = await customFetch.post("/token/", user);
       const Response = { token: tokenResp.data };
-      console.log(Response.token);
+
       if (tokenResp.status == 200) {
         const userResponse = await customFetch.get("/users/me", {
           headers: { Authorization: `Bearer ${Response.token.access}` },
         });
+
         Response.user = userResponse.data;
-        console.log(userResponse);
       }
 
       return Response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      return thunkAPI.rejectWithValue(error.response.data.detail);
     }
   }
 );
-
-// export const getUserData = createAsyncThunk(
-//   "user/getUserData",
-//   async (token, thunkAPI) => {
-//     try {
-//       const resp = await customFetch.post("/users/me", user);
-//       console.log(resp.data);
-//       return resp.data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error.response.data.msg);
-//     }
-//   }
-// );
 
 const userSlice = createSlice({
   name: "user",
@@ -84,10 +73,9 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [registerUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
       state.isLoading = false;
-      state.user = user;
-      toast.success(`Hello There ${user.name}`);
+      state.user = payload;
+      toast.success(`Hello There ${state.user.name.split(" ").shift()}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -103,13 +91,11 @@ const userSlice = createSlice({
       state.user = user;
       addObjectToLocalStorage("token", token);
       addObjectToLocalStorage("user", user);
-      // toast.success(`Welcome Back ${user.name.split(" ").shift()}`);
-      toast.success(`Welcome Back ${user.name}`);
+      toast.success(`Welcome Back ${user.name.split(" ").shift()}`);
     },
-    [loginUser.rejected]: (state, { response }) => {
-      console.log("Invliad details");
+    [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      toast.error(response);
+      toast.error(payload);
     },
   },
 });
