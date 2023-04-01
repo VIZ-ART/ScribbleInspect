@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TextRow from "../../components/TextRow";
+import FormRow from "../../components/FormRow";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector } from "react-redux";
 
@@ -19,9 +19,9 @@ const Profile = () => {
       <div className="form">
         <h3>Profile</h3>
         <div className="form-center">
-          <TextRow type="name" name="name" value={userName} />
-          <TextRow type="email" name="email" value={email} />
-          <TextRow type="user" name="user" value={userType} />
+          <FormRow type="name" name="name" value={userName} disabled={true} />
+          <FormRow type="email" name="email" value={email} disabled={true} />
+          <FormRow type="user" name="user" value={userType} disabled={true} />
         </div>
       </div>
     </Wrapper>

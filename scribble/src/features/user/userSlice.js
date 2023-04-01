@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { customFetch, setHeader } from "../../utils/axios";
+import { customFetch } from "../../utils/axios";
 import {
   addObjectToLocalStorage,
   getObjectFromLocalStorage,

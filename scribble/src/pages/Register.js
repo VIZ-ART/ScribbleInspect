@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Logo, FormRow } from "../components";
+import { Logo, FormRow, FormRowSelect } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,6 +70,7 @@ function Register() {
           <FormRow
             type="text"
             name="userName"
+            labeltext="username"
             value={values.userName}
             handleChange={handleChange}
           />
@@ -87,21 +88,12 @@ function Register() {
           handleChange={handleChange}
         />
         {values.isMember || (
-          <div>
-            <label htmlFor="User" className="form-label">
-              User
-            </label>
-            <select
-              type="select"
-              name="userType"
-              value={values.userType}
-              onChange={handleChange}
-              className="form-row"
-            >
-              <option value="Student">Student</option>
-              <option value="Teacher">Teacher</option>
-            </select>
-          </div>
+          <FormRowSelect
+            name="user"
+            value={values.userType}
+            options={["Student", "Teacher"]}
+            handleChange={handleChange}
+          />
         )}
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           {isLoading ? "Loading.." : "Submit"}
