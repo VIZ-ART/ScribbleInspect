@@ -3,7 +3,7 @@ import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { handleChange } from "../../features/task/taskSlice";
+import { handleChange, clearValues } from "../../features/task/taskSlice";
 
 const AddTask = () => {
   const {
@@ -11,12 +11,14 @@ const AddTask = () => {
     taskName,
     teacherName,
     subjectName,
-    deadline,
+    endDate,
+    endTime,
     difficultyOptions,
     difficulty,
     statusOptions,
     status,
     task,
+    answerKey,
     isEditing,
     editTaskId,
   } = useSelector((store) => store.task);
@@ -25,7 +27,7 @@ const AddTask = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!taskName || !subjectName || !deadline) {
+    if (!taskName || !subjectName || !endDate || !endTime) {
       toast.error("please fill out all the fields");
       return;
     }
@@ -34,8 +36,32 @@ const AddTask = () => {
   const handleTaskInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log("addd task ", name, value);
     dispatch(handleChange({ name, value }));
+  };
+
+  const handleFileInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.files[0];
+    console.log(name, value);
+
+    var reader;
+
+    function getBase64(file) {
+      reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = function () {
+        const base64 = reader.result;
+        console.log(typeof base64);
+        dispatch(handleChange({ name, base64 }));
+      };
+
+      reader.onerror = function (error) {
+        console.log("Error: ", error);
+      };
+    }
+
+    getBase64(value);
   };
 
   return (
@@ -45,25 +71,16 @@ const AddTask = () => {
         <div className="form-center">
           <FormRow
             type="text"
-            name="taskname"
+            name="taskName"
             labelText="task name"
             value={taskName}
             handleChange={handleTaskInput}
           />
 
-          {/* <FormRow
-            type="text"
-            name="teacherName"
-            labelText="teacher name"
-            value={teacherName}
-            handleChange={handleTaskInput}
-            disabled={true}
-          /> */}
-
           <FormRow
             type="text"
             name="subjectName"
-            labelText="subject name"
+            labeltext="subject name"
             value={subjectName}
             handleChange={handleTaskInput}
           />
@@ -79,15 +96,15 @@ const AddTask = () => {
           <FormRow
             type="file"
             name="task"
-            value={subjectName}
-            handleChange={handleTaskInput}
+            // value={task}
+            handleChange={handleFileInput}
           />
 
           <FormRow
             type="date"
             name="endDate"
             labeltext="end date"
-            value={subjectName}
+            value={endDate}
             handleChange={handleTaskInput}
           />
 
@@ -95,16 +112,15 @@ const AddTask = () => {
             type="time"
             name="endTime"
             labeltext="end time"
-            value={subjectName}
+            value={endTime}
             handleChange={handleTaskInput}
           />
 
           <FormRow
             type="file"
-            name="key"
+            name="answerKey"
             labeltext="answer key"
-            value={subjectName}
-            handleChange={handleTaskInput}
+            handleChange={handleFileInput}
           />
 
           <div className="btn-container">
@@ -112,7 +128,8 @@ const AddTask = () => {
               type="button"
               className="btn btn-block clear-btn"
               onClick={() => {
-                console.log("Clear button clicked");
+                console.log("Clear clicks");
+                dispatch(clearValues());
               }}
             >
               Clear

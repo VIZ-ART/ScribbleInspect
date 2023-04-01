@@ -8,12 +8,14 @@ const initialState = {
   taskName: "",
   teacherName: "",
   subjectName: "",
-  deadline: "",
+  endDate: "2023-01-01",
+  endTime: "00:00",
   difficultyOptions: ["easy", "medium", "hard"],
-  difficulty: "medium",
+  difficulty: "easy",
   statusOptions: ["pending", "submitted", "graded", "requested", "reviewed"],
   status: "pending",
-  task: null,
+  task: "",
+  answerKey: "",
   isEditing: false,
   editTaskId: "",
 };
@@ -23,11 +25,14 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     handleChange: (state, { payload: { name, value } }) => {
-      console.log("reducer ", name, value);
+      console.log("reducer ", name, value, typeof value);
       state[name] = value;
+    },
+    clearValues: () => {
+      return initialState;
     },
   },
 });
 
-export const { handleChange } = taskSlice.actions;
+export const { handleChange, clearValues } = taskSlice.actions;
 export default taskSlice.reducer;
