@@ -89,7 +89,7 @@ function Register() {
         />
         {values.isMember || (
           <FormRowSelect
-            name="user"
+            name="userType"
             value={values.userType}
             options={["Student", "Teacher"]}
             handleChange={handleChange}
