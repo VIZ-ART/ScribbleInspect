@@ -3,7 +3,11 @@ import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { handleChange, clearValues } from "../../features/task/taskSlice";
+import {
+  handleChange,
+  clearValues,
+  uploadFile,
+} from "../../features/task/taskSlice";
 
 const AddTask = () => {
   const {
@@ -36,32 +40,13 @@ const AddTask = () => {
   const handleTaskInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange({ name, value }));
+    dispatch(handleChange(name, value));
   };
 
   const handleFileInput = (e) => {
     const name = e.target.name;
-    const value = e.target.files[0];
-    console.log(name, value);
-
-    var reader;
-
-    function getBase64(file) {
-      reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = function () {
-        const base64 = reader.result;
-        console.log(typeof base64);
-        dispatch(handleChange({ name, base64 }));
-      };
-
-      reader.onerror = function (error) {
-        console.log("Error: ", error);
-      };
-    }
-
-    getBase64(value);
+    const file = e.target.files[0];
+    dispatch(uploadFile({ name, file }));
   };
 
   return (
@@ -72,7 +57,7 @@ const AddTask = () => {
           <FormRow
             type="text"
             name="taskName"
-            labelText="task name"
+            labeltext="task name"
             value={taskName}
             handleChange={handleTaskInput}
           />
@@ -98,6 +83,7 @@ const AddTask = () => {
             name="task"
             // value={task}
             handleChange={handleFileInput}
+            disabled={isLoading}
           />
 
           <FormRow
@@ -121,6 +107,7 @@ const AddTask = () => {
             name="answerKey"
             labeltext="answer key"
             handleChange={handleFileInput}
+            disabled={isLoading}
           />
 
           <div className="btn-container">

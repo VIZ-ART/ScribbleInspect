@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import customFetch from "../../utils/axios";
-import { getUserFromLocalStorage } from "../../utils/localStorage";
+import { customFetch } from "../../utils/axios";
+import {
+  addObjectToLocalStorage,
+  getObjectFromLocalStorage,
+} from "../../utils/localStorage";
 
 const initialState = {
   isLoading: false,
@@ -20,9 +23,38 @@ const initialState = {
   editTaskId: "",
 };
 
+export const uploadFile = createAsyncThunk(
+  "task/uploadFile",
+  async (filedata, thunkAPI) => {
+    try {
+      const { name, file } = filedata;
+      console.log("file : ", file);
+      const formData = new FormData();
+      formData.append("pdf", file);
+
+      const axiosConfig = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const resp = await customFetch.post(
+        "/pdfs/files/",
+        formData,
+        axiosConfig
+      );
+
+      return { name: name, pdf: resp.data.link };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.pdf.shift());
+    }
+  }
+);
+
 const taskSlice = createSlice({
   name: "task",
   initialState,
+
   reducers: {
     handleChange: (state, { payload: { name, value } }) => {
       console.log("reducer ", name, value, typeof value);
@@ -30,6 +62,21 @@ const taskSlice = createSlice({
     },
     clearValues: () => {
       return initialState;
+    },
+  },
+
+  extraReducers: {
+    [uploadFile.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [uploadFile.fulfilled]: (state, { payload }) => {
+      const { name, link } = payload;
+      state.isLoading = false;
+      state[name] = link;
+    },
+    [uploadFile.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload || "Something went wrong!");
     },
   },
 });
