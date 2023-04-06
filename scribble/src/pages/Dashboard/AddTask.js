@@ -40,7 +40,7 @@ const AddTask = () => {
   const handleTaskInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange(name, value));
+    dispatch(handleChange({ name, value }));
   };
 
   const handleFileInput = (e) => {
