@@ -1,64 +1,75 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  handleChange,
-  clearValues,
-  uploadFile,
-} from "../../features/task/taskSlice";
+import { createTask, uploadFile } from "../../features/task/taskSlice";
+import { getObjectFromLocalStorage } from "../../utils/localStorage";
+
+const today = new Date();
+const year = today.getFullYear().toString();
+const month = (today.getMonth() + 1).toString().padStart(2, 0);
+const date = today.getDate().toString().padStart(2, 0);
+
+const initialState = {
+  taskName: "",
+  teacherName: getObjectFromLocalStorage("user")?.userName,
+  subjectName: "",
+  endDate: `${year}-${month}-${date}`,
+  endTime: "00:00",
+  difficultyOptions: ["Easy", "Medium", "Hard"],
+  difficulty: "Easy",
+  statusOptions: ["pending", "submitted", "graded", "requested", "reviewed"],
+  status: "pending",
+  taskfile: null,
+  answerKey: null,
+  isEditing: false,
+  editTaskId: "",
+};
 
 const AddTask = () => {
-  const {
-    isLoading,
-    taskName,
-    teacherName,
-    subjectName,
-    endDate,
-    endTime,
-    difficultyOptions,
-    difficulty,
-    statusOptions,
-    status,
-    task,
-    answerKey,
-    isEditing,
-    editTaskId,
-  } = useSelector((store) => store.task);
-  // const { user } = useSelector((store) => store.user);
+  const [values, setValues] = useState(initialState);
+  const { task, isLoading } = useSelector((store) => store.task);
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!taskName || !subjectName || !endDate || !endTime) {
+    if (
+      !values.taskName ||
+      !values.subjectName ||
+      !values.endDate ||
+      !values.endTime
+    ) {
       toast.error("please fill out all the fields");
       return;
     }
+    dispatch(createTask(values));
   };
 
   const handleTaskInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange({ name, value }));
+    console.log(`${name}:${value}`);
+    setValues({ ...values, [name]: value });
   };
 
   const handleFileInput = (e) => {
     const name = e.target.name;
     const file = e.target.files[0];
-    dispatch(uploadFile({ name, file }));
+    const link = dispatch(uploadFile({ file }));
+    setValues({ ...values, [name]: link ? link : null });
   };
 
   return (
     <Wrapper>
       <form className="form">
-        <h3>{isEditing ? "edit task" : "add task"}</h3>
+        <h3>{values.isEditing ? "edit task" : "add task"}</h3>
         <div className="form-center">
           <FormRow
             type="text"
             name="taskName"
             labeltext="task name"
-            value={taskName}
+            value={values.taskName}
             handleChange={handleTaskInput}
           />
 
@@ -66,14 +77,14 @@ const AddTask = () => {
             type="text"
             name="subjectName"
             labeltext="subject name"
-            value={subjectName}
+            value={values.subjectName}
             handleChange={handleTaskInput}
           />
 
           <FormRowSelect
             name="difficulty"
-            value={difficulty}
-            options={difficultyOptions}
+            value={values.difficulty}
+            options={values.difficultyOptions}
             labeltext="difficulty level"
             handleChange={handleTaskInput}
           />
@@ -90,7 +101,7 @@ const AddTask = () => {
             type="date"
             name="endDate"
             labeltext="end date"
-            value={endDate}
+            value={values.endDate}
             handleChange={handleTaskInput}
           />
 
@@ -98,7 +109,7 @@ const AddTask = () => {
             type="time"
             name="endTime"
             labeltext="end time"
-            value={endTime}
+            value={values.endTime}
             handleChange={handleTaskInput}
           />
 
@@ -115,8 +126,7 @@ const AddTask = () => {
               type="button"
               className="btn btn-block clear-btn"
               onClick={() => {
-                console.log("Clear clicks");
-                dispatch(clearValues());
+                setValues(initialState);
               }}
             >
               Clear

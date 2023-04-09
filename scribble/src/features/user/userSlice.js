@@ -26,10 +26,7 @@ export const registerUser = createAsyncThunk(
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response.data.name?.shift() ||
-          error.response.data.user_type?.shift() ||
-          error.response.data.email?.shift() ||
-          error.response.data.password?.shift()
+        Object.values(error.response.data).shift().shift()
       );
     }
   }
@@ -42,7 +39,7 @@ export const loginUser = createAsyncThunk(
       const tokenResp = await customFetch.post("/token/", user);
       const Response = { token: tokenResp.data };
 
-      if (tokenResp.status == 200) {
+      if (tokenResp.status === 200) {
         const userResponse = await customFetch.get("/users/me", {
           headers: { Authorization: `Bearer ${Response.token.access}` },
         });

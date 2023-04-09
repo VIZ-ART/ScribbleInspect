@@ -8,26 +8,15 @@ import {
 
 const initialState = {
   isLoading: false,
-  taskName: "",
-  teacherName: "",
-  subjectName: "",
-  endDate: "2023-01-01",
-  endTime: "00:00",
-  difficultyOptions: ["easy", "medium", "hard"],
-  difficulty: "easy",
-  statusOptions: ["pending", "submitted", "graded", "requested", "reviewed"],
-  status: "pending",
-  task: "",
-  answerKey: "",
-  isEditing: false,
-  editTaskId: "",
+  task: null,
+  user: getObjectFromLocalStorage("user"),
 };
 
 export const uploadFile = createAsyncThunk(
   "task/uploadFile",
   async (filedata, thunkAPI) => {
     try {
-      const { name, file } = filedata;
+      const { file } = filedata;
       console.log("file : ", file);
       const formData = new FormData();
       formData.append("pdf", file);
@@ -44,9 +33,32 @@ export const uploadFile = createAsyncThunk(
         axiosConfig
       );
 
-      return { name: name, pdf: resp.data.link };
+      return { pdf: resp.data.link };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.pdf.shift());
+    }
+  }
+);
+
+export const createTask = createAsyncThunk(
+  "task/createTask",
+  async (task, thunkAPI) => {
+    try {
+      console.log(task);
+      const resp = await customFetch.post("/tasks/addtask", {
+        name: task.taskName,
+        subject: task.subjectName,
+        teacher: task.teacherName,
+        difficulty: task.difficulty,
+        end_date: task.endDate,
+        end_time: task.endTime,
+        task_pdf_link: task.taskFile,
+        answer_key_link: task.answerKey,
+      });
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        Object.values(error.response.data).shift().shift()
+      );
     }
   }
 );
@@ -55,31 +67,38 @@ const taskSlice = createSlice({
   name: "task",
   initialState,
 
-  reducers: {
-    handleChange: (state, { payload: { name, value } }) => {
-      console.log("reducer ", name, value, typeof value);
-      state[name] = value;
-    },
-    clearValues: () => {
-      return initialState;
-    },
-  },
+  reducers: {},
 
   extraReducers: {
     [uploadFile.pending]: (state) => {
       state.isLoading = true;
     },
     [uploadFile.fulfilled]: (state, { payload }) => {
-      const { name, link } = payload;
       state.isLoading = false;
-      state[name] = link;
+      console.log(payload.link);
+      return payload.link;
     },
     [uploadFile.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload || "Something went wrong!");
+      return null;
+    },
+    [createTask.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [createTask.fulfilled]: (state, { payload }) => {
+      const { task } = payload;
+      state.isLoading = false;
+      state.task = task;
+      toast.success("Created a new task");
+    },
+    [createTask.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload || "Something went wrong!");
+      return null;
     },
   },
 });
 
-export const { handleChange, clearValues } = taskSlice.actions;
+// export const { handleChange, clearValues } = taskSlice.actions;
 export default taskSlice.reducer;
