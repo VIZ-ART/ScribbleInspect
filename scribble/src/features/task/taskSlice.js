@@ -8,16 +8,17 @@ import {
 
 const initialState = {
   isLoading: false,
-  task: null,
+  taskLink: null,
+  answerKeyLink: null,
   user: getObjectFromLocalStorage("user"),
+  isError: false,
 };
 
 export const uploadFile = createAsyncThunk(
   "task/uploadFile",
   async (filedata, thunkAPI) => {
     try {
-      const { file } = filedata;
-      console.log("file : ", file);
+      const { name, file } = filedata;
       const formData = new FormData();
       formData.append("pdf", file);
 
@@ -33,7 +34,8 @@ export const uploadFile = createAsyncThunk(
         axiosConfig
       );
 
-      return { pdf: resp.data.link };
+      console.log("Response ", resp.data.pdf);
+      return { name: name, fileLink: resp.data.pdf };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.pdf.shift());
     }
@@ -44,7 +46,7 @@ export const createTask = createAsyncThunk(
   "task/createTask",
   async (task, thunkAPI) => {
     try {
-      console.log(task);
+      // console.log(task);
       const resp = await customFetch.post("/tasks/addtask", {
         name: task.taskName,
         subject: task.subjectName,
@@ -72,16 +74,17 @@ const taskSlice = createSlice({
   extraReducers: {
     [uploadFile.pending]: (state) => {
       state.isLoading = true;
+      state.fileLink = null;
     },
     [uploadFile.fulfilled]: (state, { payload }) => {
+      const { name, fileLink } = payload;
       state.isLoading = false;
-      console.log(payload.link);
-      return payload.link;
+      state[name + "Link"] = fileLink;
+      console.log("fileLink ", fileLink);
     },
     [uploadFile.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload || "Something went wrong!");
-      return null;
     },
     [createTask.pending]: (state) => {
       state.isLoading = true;

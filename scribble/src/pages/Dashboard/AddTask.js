@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { createTask, uploadFile } from "../../features/task/taskSlice";
 import { getObjectFromLocalStorage } from "../../utils/localStorage";
+// import { usePdfLink } from "../../features/task/usePdfLink";
 
 const today = new Date();
 const year = today.getFullYear().toString();
@@ -13,23 +14,23 @@ const date = today.getDate().toString().padStart(2, 0);
 
 const initialState = {
   taskName: "",
-  teacherName: getObjectFromLocalStorage("user")?.userName,
+  teacherName: getObjectFromLocalStorage("user")?.user_name,
   subjectName: "",
   endDate: `${year}-${month}-${date}`,
   endTime: "00:00",
   difficultyOptions: ["Easy", "Medium", "Hard"],
   difficulty: "Easy",
-  statusOptions: ["pending", "submitted", "graded", "requested", "reviewed"],
-  status: "pending",
-  taskfile: null,
-  answerKey: null,
+  statusOptions: ["Ongoing", "Completed", "Graded"],
+  status: "Ongoing",
+  taskfile: false,
+  answerKey: false,
   isEditing: false,
   editTaskId: "",
 };
 
 const AddTask = () => {
   const [values, setValues] = useState(initialState);
-  const { task, isLoading } = useSelector((store) => store.task);
+  const { fileLink, isLoading } = useSelector((store) => store.task);
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -41,6 +42,10 @@ const AddTask = () => {
       !values.endTime
     ) {
       toast.error("please fill out all the fields");
+      return;
+    }
+    if (!values.taskfile || !values.answerKey) {
+      toast.error("please upload all the files");
       return;
     }
     dispatch(createTask(values));
@@ -56,8 +61,8 @@ const AddTask = () => {
   const handleFileInput = (e) => {
     const name = e.target.name;
     const file = e.target.files[0];
-    const link = dispatch(uploadFile({ file }));
-    setValues({ ...values, [name]: link ? link : null });
+    dispatch(uploadFile({ name, file }));
+    console.log("Add task ile link : ", fileLink);
   };
 
   return (
