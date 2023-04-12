@@ -1,29 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { createTask, uploadFile } from "../../features/task/taskSlice";
 import { getObjectFromLocalStorage } from "../../utils/localStorage";
-// import { usePdfLink } from "../../features/task/usePdfLink";
-
-const today = new Date();
-const year = today.getFullYear().toString();
-const month = (today.getMonth() + 1).toString().padStart(2, 0);
-const date = today.getDate().toString().padStart(2, 0);
 
 const initialState = {
   taskName: "",
-  teacherName: getObjectFromLocalStorage("user")?.user_name,
+  teacherName: getObjectFromLocalStorage("user")?.name,
   subjectName: "",
-  endDate: `${year}-${month}-${date}`,
-  endTime: "00:00",
+  endDate: "",
+  endTime: "",
   difficultyOptions: ["Easy", "Medium", "Hard"],
   difficulty: "Easy",
-  statusOptions: ["Ongoing", "Completed", "Graded"],
-  status: "Ongoing",
-  taskfile: false,
-  answerKey: false,
+  task: null,
+  answerKey: null,
   isEditing: false,
   editTaskId: "",
 };
@@ -31,10 +23,13 @@ const initialState = {
 const AddTask = () => {
   const [values, setValues] = useState(initialState);
   const { fileLink, isLoading } = useSelector((store) => store.task);
+  const taskRef = React.createRef();
+  const answerKeyRef = React.createRef();
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(values);
     if (
       !values.taskName ||
       !values.subjectName ||
@@ -44,11 +39,17 @@ const AddTask = () => {
       toast.error("please fill out all the fields");
       return;
     }
-    if (!values.taskfile || !values.answerKey) {
+    if (!values.task || !values.answerKey) {
       toast.error("please upload all the files");
       return;
     }
     dispatch(createTask(values));
+  };
+
+  const handleClear = () => {
+    setValues(initialState);
+    taskRef.current.value = null;
+    answerKeyRef.current.value = null;
   };
 
   const handleTaskInput = (e) => {
@@ -61,8 +62,16 @@ const AddTask = () => {
   const handleFileInput = (e) => {
     const name = e.target.name;
     const file = e.target.files[0];
-    dispatch(uploadFile({ name, file }));
-    console.log("Add task ile link : ", fileLink);
+    dispatch(
+      uploadFile({
+        name,
+        file,
+        callback: (fileLink) => {
+          console.log("file link in add task ", fileLink);
+          setValues({ ...values, [name]: fileLink });
+        },
+      })
+    );
   };
 
   return (
@@ -100,6 +109,7 @@ const AddTask = () => {
             // value={task}
             handleChange={handleFileInput}
             disabled={isLoading}
+            ref={taskRef}
           />
 
           <FormRow
@@ -124,15 +134,14 @@ const AddTask = () => {
             labeltext="answer key"
             handleChange={handleFileInput}
             disabled={isLoading}
+            ref={answerKeyRef}
           />
 
           <div className="btn-container">
             <button
               type="button"
               className="btn btn-block clear-btn"
-              onClick={() => {
-                setValues(initialState);
-              }}
+              onClick={handleClear}
             >
               Clear
             </button>
@@ -142,7 +151,7 @@ const AddTask = () => {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              Submit
+              Create
             </button>
           </div>
         </div>

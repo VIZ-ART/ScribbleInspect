@@ -8,17 +8,14 @@ import {
 
 const initialState = {
   isLoading: false,
-  taskLink: null,
-  answerKeyLink: null,
-  user: getObjectFromLocalStorage("user"),
-  isError: false,
+  task: null,
 };
 
 export const uploadFile = createAsyncThunk(
   "task/uploadFile",
   async (filedata, thunkAPI) => {
     try {
-      const { name, file } = filedata;
+      const { name, file, callback } = filedata;
       const formData = new FormData();
       formData.append("pdf", file);
 
@@ -35,7 +32,7 @@ export const uploadFile = createAsyncThunk(
       );
 
       console.log("Response ", resp.data.pdf);
-      return { name: name, fileLink: resp.data.pdf };
+      return { name: name, fileLink: resp.data.pdf, callback: callback };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.pdf.shift());
     }
@@ -46,7 +43,6 @@ export const createTask = createAsyncThunk(
   "task/createTask",
   async (task, thunkAPI) => {
     try {
-      // console.log(task);
       const resp = await customFetch.post("/tasks/addtask", {
         name: task.taskName,
         subject: task.subjectName,
@@ -54,7 +50,7 @@ export const createTask = createAsyncThunk(
         difficulty: task.difficulty,
         end_date: task.endDate,
         end_time: task.endTime,
-        task_pdf_link: task.taskFile,
+        task_pdf_link: task.task,
         answer_key_link: task.answerKey,
       });
     } catch (error) {
@@ -77,10 +73,10 @@ const taskSlice = createSlice({
       state.fileLink = null;
     },
     [uploadFile.fulfilled]: (state, { payload }) => {
-      const { name, fileLink } = payload;
+      const { name, fileLink, callback } = payload;
       state.isLoading = false;
-      state[name + "Link"] = fileLink;
-      console.log("fileLink ", fileLink);
+      console.log("fulfilled  ", name, fileLink);
+      callback(fileLink);
     },
     [uploadFile.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -90,9 +86,8 @@ const taskSlice = createSlice({
       state.isLoading = true;
     },
     [createTask.fulfilled]: (state, { payload }) => {
-      const { task } = payload;
       state.isLoading = false;
-      state.task = task;
+      state.task = payload;
       toast.success("Created a new task");
     },
     [createTask.rejected]: (state, { payload }) => {
@@ -103,5 +98,4 @@ const taskSlice = createSlice({
   },
 });
 
-// export const { handleChange, clearValues } = taskSlice.actions;
 export default taskSlice.reducer;
