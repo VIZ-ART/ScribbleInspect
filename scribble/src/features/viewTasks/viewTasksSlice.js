@@ -11,8 +11,8 @@ const initialFiltersState = {
 };
 
 const initialState = {
-  isLoading: false,
-  tasks: [],
+  isLoading: true,
+  tasks: [1, 2, 3],
   totalTasks: 0,
   numOfPages: 1,
   page: 1,
@@ -20,9 +20,9 @@ const initialState = {
   ...initialFiltersState,
 };
 
-const allTasksSlice = createSlice({
-  name: "allJobs",
+const viewTasksSlice = createSlice({
+  name: "viewJobs",
   initialState,
 });
 
-export default allTasksSlice.reducer;
+export default viewTasksSlice.reducer;

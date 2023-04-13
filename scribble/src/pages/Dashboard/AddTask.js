@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,7 +22,7 @@ const initialState = {
 
 const AddTask = () => {
   const [values, setValues] = useState(initialState);
-  const { fileLink, isLoading } = useSelector((store) => store.task);
+  const { isLoading } = useSelector((store) => store.task);
   const taskRef = React.createRef();
   const answerKeyRef = React.createRef();
   const dispatch = useDispatch();
@@ -44,6 +44,7 @@ const AddTask = () => {
       return;
     }
     dispatch(createTask(values));
+    handleClear();
   };
 
   const handleClear = () => {

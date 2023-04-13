@@ -1,7 +1,13 @@
 import React from "react";
+import { TasksContainer, SearchContainer } from "../../components";
 
 const ViewTasks = () => {
-  return <h1>ViewTasks</h1>;
+  return (
+    <>
+      <SearchContainer />
+      <TasksContainer />
+    </>
+  );
 };
 
 export default ViewTasks;
