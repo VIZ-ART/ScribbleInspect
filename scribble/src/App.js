@@ -7,6 +7,7 @@ import {
   Profile,
   ViewTasks,
   AddTask,
+  Results,
   SharedLayout,
 } from "./pages/Dashboard";
 
@@ -25,6 +26,7 @@ function App() {
           <Route index element={<Stats />} />
           <Route path="view-tasks" element={<ViewTasks />} />
           <Route path="add-task" element={<AddTask />} />
+          <Route path="results" element={<Results />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="landing" element={<Landing />} />

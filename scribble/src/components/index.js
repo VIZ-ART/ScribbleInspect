@@ -6,6 +6,7 @@ import BigSidebar from "./BigSidebar";
 import SmallSidebar from "./SmallSidebar";
 import SearchContainer from "./SearchContainer";
 import TasksContainer from "./TasksContainer";
+import Task from "./Task";
 
 export {
   Logo,
@@ -16,4 +17,5 @@ export {
   SmallSidebar,
   SearchContainer,
   TasksContainer,
+  Task,
 };

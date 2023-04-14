@@ -1,7 +1,8 @@
 import { IoBarChartSharp } from "react-icons/io5";
-import { MdQueryStats } from "react-icons/md";
+import { HiMagnifyingGlass } from "react-icons/hi2";
 import { FaWpforms } from "react-icons/fa";
-import { ImProfile } from "react-icons/im";
+import { HiOutlineNewspaper } from "react-icons/hi";
+import { CgProfile } from "react-icons/cg";
 
 const links = [
   {
@@ -15,7 +16,7 @@ const links = [
     id: 2,
     text: "view tasks",
     path: "/view-tasks",
-    icon: <MdQueryStats />,
+    icon: <HiMagnifyingGlass />,
     restricted: false,
   },
   {
@@ -27,9 +28,16 @@ const links = [
   },
   {
     id: 4,
+    text: "results",
+    path: "/results",
+    icon: <HiOutlineNewspaper />,
+    restricted: false,
+  },
+  {
+    id: 5,
     text: "profile",
     path: "/profile",
-    icon: <ImProfile />,
+    icon: <CgProfile />,
     restricted: false,
   },
 ];

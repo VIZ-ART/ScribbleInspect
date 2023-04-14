@@ -35,7 +35,9 @@ export const uploadFile = createAsyncThunk(
       return { data: resp.data, callback: callback };
     } catch (error) {
       if (error.response.status === 401) {
-        thunkAPI.dispatch(logoutUser("Session expired..."));
+        thunkAPI.dispatch(
+          logoutUser({ type: "error", message: "Session expired..." })
+        );
         return;
       }
       return thunkAPI.rejectWithValue(error.response.data.detail);
@@ -66,7 +68,9 @@ export const createTask = createAsyncThunk(
       );
     } catch (error) {
       if (error.response.status === 401) {
-        thunkAPI.dispatch(logoutUser("Session expired..."));
+        thunkAPI.dispatch(
+          logoutUser({ type: "error", message: "Session expired..." })
+        );
         return;
       }
       return thunkAPI.rejectWithValue(
