@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import customFetch from "../../utils/axios";
+import { customFetch } from "../../utils/axios";
+import { getObjectFromLocalStorage } from "../../utils/localStorage";
 
 const initialFiltersState = {
   search: "",
@@ -12,54 +13,28 @@ const initialFiltersState = {
 
 const initialState = {
   isLoading: false,
-  tasks: [
-    {
-      _id: "A001",
-      name: "Lexical Analyser",
-      teacher: "Jasiya Jabbar",
-      subject: "Compiler Design",
-      difficulty: "Medium",
-      end_date: "2023-04-25",
-      end_time: "00:00",
-      task_pdf_link: "www.google.com",
-    },
-    {
-      _id: "A002",
-      name: "AVL Tree Rotation",
-      teacher: "Fabi A K",
-      subject: "Algorithm Analysis and Design",
-      difficulty: "Easy",
-      end_date: "2023-04-19",
-      end_time: "23:59",
-      task_pdf_link: "www.google.com",
-    },
-    {
-      _id: "A003",
-      name: "SRS Document",
-      teacher: "Aneesh G Nath",
-      subject: "Mini Project",
-      difficulty: "Hard",
-      end_date: "2023-04-30",
-      end_time: "16:00",
-      task_pdf_link: "www.google.com",
-    },
-    {
-      _id: "A004",
-      name: "Graphics Modelling",
-      teacher: "Shyna A",
-      subject: "Computer Graphics and Image Processing",
-      difficulty: "Hard",
-      end_date: "2023-04-16",
-      end_time: "00:00",
-      task_pdf_link: "www.google.com",
-    },
-  ],
-  totalTasks: 2,
+  tasks: [],
+  totalTasks: 0,
   numOfPages: 1,
   page: 1,
   stats: {},
   ...initialFiltersState,
 };
+
+export const getAllTasks = createAsyncThunk(
+  "tasks/getTasks",
+  async (thunkAPI) => {
+    try {
+      const token = getObjectFromLocalStorage("token");
+      const resp = await customFetch.get("/tasks/alltasks", {
+        headers: { Authorization: `Bearer ${token.access}` },
+      });
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const viewTasksSlice = createSlice({
   name: "viewTasks",
@@ -70,6 +45,32 @@ const viewTasksSlice = createSlice({
     },
     hideLoading: (state) => {
       state.isLoading = false;
+    },
+  },
+  extraReducers: {
+    [getAllTasks.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getAllTasks.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      state.totalTasks = payload.length;
+      state.numOfPages = Math.ceil(payload.length);
+      state.tasks = payload.map((item) => {
+        return {
+          id: item.id,
+          taskName: item.name,
+          subjectName: item.subject,
+          teacherName: item.teacher,
+          maxMarks: item.max_marks,
+          endDate: item.end_date,
+          endTime: item.end_time,
+          task: item.task_pdf_link,
+        };
+      });
+    },
+    [getAllTasks.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload || "Get task went wrong :)");
     },
   },
 });

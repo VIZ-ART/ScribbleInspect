@@ -12,8 +12,7 @@ const initialState = {
   subjectName: "",
   endDate: "",
   endTime: "",
-  difficultyOptions: ["Easy", "Medium", "Hard"],
-  difficulty: "Easy",
+  maxMarks: "",
   task: null,
   answerKey: null,
   isEditing: false,
@@ -34,7 +33,8 @@ const AddTask = () => {
       !values.taskName ||
       !values.subjectName ||
       !values.endDate ||
-      !values.endTime
+      !values.endTime ||
+      !values.maxMarks
     ) {
       toast.error("please fill out all the fields");
       return;
@@ -44,7 +44,7 @@ const AddTask = () => {
       return;
     }
     dispatch(createTask(values));
-    handleClear();
+    // handleClear();
   };
 
   const handleClear = () => {
@@ -96,18 +96,17 @@ const AddTask = () => {
             handleChange={handleTaskInput}
           />
 
-          <FormRowSelect
-            name="difficulty"
-            value={values.difficulty}
-            options={values.difficultyOptions}
-            labeltext="difficulty level"
+          <FormRow
+            type="number"
+            name="maxMarks"
+            value={values.maxMarks}
+            labeltext="maximum marks"
             handleChange={handleTaskInput}
           />
 
           <FormRow
             type="file"
             name="task"
-            // value={task}
             handleChange={handleFileInput}
             disabled={isLoading}
             ref={taskRef}

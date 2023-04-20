@@ -1,45 +1,33 @@
 import React from "react";
 import { FaBookOpen, FaCalendarCheck } from "react-icons/fa";
-import { SiLevelsdotfyi } from "react-icons/si";
+import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Task";
 import { useDispatch } from "react-redux";
 import TaskInfo from "./TaskInfo";
 
 const Task = ({
-  _id,
-  name,
-  teacher,
-  subject,
-  difficulty,
-  end_date,
-  end_time,
-  task_pdf_link,
+  id,
+  taskName,
+  teacherName,
+  subjectName,
+  maxMarks,
+  endDate,
+  endTime,
+  task,
 }) => {
   const dispatch = useDispatch();
 
   let iconLetters = "";
-  subject.split(" ").forEach((word) => {
+  subjectName.split(" ").forEach((word) => {
     if (word.length > 0 && word.charAt(0) === word.charAt(0).toUpperCase())
       iconLetters += word.charAt(0);
   });
 
-  const date = new Date(end_date);
-  const formattedDate = date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const time = new Date(`2000-01-01T${end_time}:00`);
-  const formattedTime = time.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
-
   const formatDateTime = (date, time) => {
-    const datetime = new Date(`${date}T${time}:00`);
+    console.log(date, time);
+    const datetime = new Date(`${date} ${time}`);
+    console.log(datetime);
     const formattedDate = datetime.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -50,7 +38,6 @@ const Task = ({
       minute: "numeric",
       hour12: true,
     });
-
     return `${formattedDate} ${formattedTime}`;
   };
 
@@ -59,18 +46,21 @@ const Task = ({
       <header>
         <div className="main-icon">{iconLetters.substring(0, 4)}</div>
         <div className="info">
-          <h5>{name}</h5>
-          <p>{teacher}</p>
+          <h5>{taskName}</h5>
+          <p>{teacherName}</p>
         </div>
       </header>
       <div className="content">
         <div className="content-center">
-          <TaskInfo icon={<FaBookOpen />} text={subject} />
+          <TaskInfo icon={<FaBookOpen />} text={subjectName} />
           <TaskInfo
             icon={<FaCalendarCheck />}
-            text={formatDateTime(end_date, end_time)}
+            text={formatDateTime(endDate, endTime)}
           />
-          <TaskInfo icon={<SiLevelsdotfyi />} text={difficulty} />
+          <TaskInfo
+            icon={<IoShieldCheckmarkSharp />}
+            text={`${maxMarks} marks`}
+          />
           <div className={`status pending`}>pending</div>
         </div>
         <footer>

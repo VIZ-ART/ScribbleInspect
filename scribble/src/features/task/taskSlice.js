@@ -56,7 +56,7 @@ export const createTask = createAsyncThunk(
           name: task.taskName,
           subject: task.subjectName,
           teacher: task.teacherName,
-          difficulty: task.difficulty,
+          max_marks: task.maxMarks,
           end_date: task.endDate,
           end_time: task.endTime,
           task_pdf_link: task.task,
