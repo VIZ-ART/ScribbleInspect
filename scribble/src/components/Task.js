@@ -3,7 +3,6 @@ import { FaBookOpen, FaCalendarCheck } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Task";
-import { useDispatch } from "react-redux";
 import TaskInfo from "./TaskInfo";
 
 const Task = ({
@@ -16,8 +15,6 @@ const Task = ({
   endTime,
   task,
 }) => {
-  const dispatch = useDispatch();
-
   let iconLetters = "";
   subjectName.split(" ").forEach((word) => {
     if (word.length > 0 && word.charAt(0) === word.charAt(0).toUpperCase())
@@ -25,9 +22,7 @@ const Task = ({
   });
 
   const formatDateTime = (date, time) => {
-    console.log(date, time);
     const datetime = new Date(`${date} ${time}`);
-    console.log(datetime);
     const formattedDate = datetime.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",

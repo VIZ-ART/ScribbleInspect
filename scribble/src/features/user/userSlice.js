@@ -12,6 +12,8 @@ const initialState = {
   isSidebarOpen: false,
   user: getObjectFromLocalStorage("user"),
   token: getObjectFromLocalStorage("token"),
+  isTeacher:
+    getObjectFromLocalStorage("user").user_type === "Teacher" ? true : false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -79,8 +81,11 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [registerUser.fulfilled]: (state, { payload }) => {
+      console.log(payload);
       state.isLoading = false;
       state.user = payload;
+      addObjectToLocalStorage("user", payload);
+      state.isTeacher = payload.user_type === "Teacher" ? true : false;
       toast.success(`Hello There ${state.user.name.split(" ").shift()}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
@@ -95,6 +100,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.token = token;
       state.user = user;
+      state.isTeacher = user.user_type === "Teacher" ? true : false;
       addObjectToLocalStorage("token", token);
       addObjectToLocalStorage("user", user);
       toast.success(`Welcome Back ${user.name.split(" ").shift()}`);

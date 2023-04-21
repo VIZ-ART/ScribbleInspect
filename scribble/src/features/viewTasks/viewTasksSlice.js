@@ -36,6 +36,24 @@ export const getAllTasks = createAsyncThunk(
   }
 );
 
+export const getTeacherTasks = createAsyncThunk(
+  "tasks/getTeacherTasks",
+  async (thunkAPI) => {
+    try {
+      const token = getObjectFromLocalStorage("token");
+      const name = getObjectFromLocalStorage("user").name;
+      const resp = await customFetch.get("/tasks/alltasks/" + name, {
+        // headers: { Authorization: `Bearer ${token.access}` },
+      });
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.detail.shift().shift()
+      );
+    }
+  }
+);
+
 const viewTasksSlice = createSlice({
   name: "viewTasks",
   initialState,
@@ -54,7 +72,7 @@ const viewTasksSlice = createSlice({
     [getAllTasks.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
       state.totalTasks = payload.length;
-      state.numOfPages = Math.ceil(payload.length);
+      state.numOfPages = Math.ceil(payload.length / 10);
       state.tasks = payload.map((item) => {
         return {
           id: item.id,
@@ -69,6 +87,31 @@ const viewTasksSlice = createSlice({
       });
     },
     [getAllTasks.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload || "Get task went wrong :)");
+    },
+    [getTeacherTasks.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getTeacherTasks.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      state.totalTasks = payload.length;
+      state.numOfPages = Math.ceil(payload.length / 10);
+      console.log(payload);
+      state.tasks = payload.map((item) => {
+        return {
+          id: item.id,
+          taskName: item.name,
+          subjectName: item.subject,
+          teacherName: item.teacher,
+          maxMarks: item.max_marks,
+          endDate: item.end_date,
+          endTime: item.end_time,
+          task: item.task_pdf_link,
+        };
+      });
+    },
+    [getTeacherTasks.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload || "Get task went wrong :)");
     },

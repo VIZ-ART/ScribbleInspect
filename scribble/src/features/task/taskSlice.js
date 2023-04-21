@@ -13,11 +13,10 @@ export const uploadFile = createAsyncThunk(
   "task/uploadFile",
   async (filedata, thunkAPI) => {
     try {
-      const { name, file, callback } = filedata;
+      const { file, callback } = filedata;
       const formData = new FormData();
       formData.append("pdf", file);
       const token = getObjectFromLocalStorage("token");
-      console.log(token.access);
 
       const axiosConfig = {
         headers: {
@@ -66,6 +65,7 @@ export const createTask = createAsyncThunk(
           headers: { Authorization: `Bearer ${token.access}` },
         }
       );
+      return resp;
     } catch (error) {
       if (error.response.status === 401) {
         thunkAPI.dispatch(
@@ -95,7 +95,6 @@ const taskSlice = createSlice({
       const { data, callback } = payload;
       const fileLink = data.pdf;
       state.isLoading = false;
-      console.log("fulfilled  ", data.pdf);
       callback(fileLink);
     },
     [uploadFile.rejected]: (state, { payload }) => {
@@ -107,7 +106,6 @@ const taskSlice = createSlice({
     },
     [createTask.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.task = payload;
       toast.success("Created a new task");
     },
     [createTask.rejected]: (state, { payload }) => {

@@ -4,15 +4,20 @@ import Task from "./Task";
 import Wrapper from "../assets/wrappers/TasksContainer";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
-import { getAllTasks } from "../features/viewTasks/viewTasksSlice";
+import {
+  getAllTasks,
+  getTeacherTasks,
+} from "../features/viewTasks/viewTasksSlice";
 
 const TasksContainer = () => {
   const { tasks, isLoading } = useSelector((store) => store.viewTasks);
+  const { isTeacher } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllTasks());
-  }, []);
+    console.log(isTeacher);
+    isTeacher ? dispatch(getTeacherTasks()) : dispatch(getAllTasks());
+  }, [dispatch]);
 
   if (isLoading) return <Loading center />;
 

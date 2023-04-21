@@ -4,13 +4,13 @@ import { NavLink } from "react-router-dom";
 import links from "../utils/links";
 
 const NavLinks = ({ toggleSidebar }) => {
-  const { user } = useSelector((store) => store.user);
+  const { isTeacher } = useSelector((store) => store.user);
   return (
     <div className="nav-links">
       {links.map((link) => {
         const { text, path, id, icon, restricted } = link;
 
-        if (restricted && user.user_type === "Student") return;
+        if (restricted && !isTeacher) return;
 
         return (
           <NavLink

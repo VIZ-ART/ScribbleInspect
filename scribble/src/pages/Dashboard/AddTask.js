@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormRow, FormRowSelect } from "../../components";
+import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -65,7 +65,6 @@ const AddTask = () => {
     const file = e.target.files[0];
     dispatch(
       uploadFile({
-        name,
         file,
         callback: (fileLink) => {
           console.log("file link in add task ", fileLink);
