@@ -15,9 +15,8 @@ const TasksContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(isTeacher);
     isTeacher ? dispatch(getTeacherTasks()) : dispatch(getAllTasks());
-  }, [dispatch]);
+  }, [isTeacher, dispatch]);
 
   if (isLoading) return <Loading center />;
 

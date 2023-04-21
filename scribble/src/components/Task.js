@@ -4,6 +4,8 @@ import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Task";
 import TaskInfo from "./TaskInfo";
+import { useDispatch } from "react-redux";
+import { deleteTask } from "../features/task/taskSlice";
 
 const Task = ({
   id,
@@ -15,6 +17,8 @@ const Task = ({
   endTime,
   task,
 }) => {
+  const dispatch = useDispatch();
+
   let iconLetters = "";
   subjectName.split(" ").forEach((word) => {
     if (word.length > 0 && word.charAt(0) === word.charAt(0).toUpperCase())
@@ -34,6 +38,11 @@ const Task = ({
       hour12: true,
     });
     return `${formattedDate} ${formattedTime}`;
+  };
+
+  const handleDelete = () => {
+    const result = window.confirm("Are you sure you want to delete this task?");
+    result && dispatch(deleteTask(id));
   };
 
   return (
@@ -70,7 +79,7 @@ const Task = ({
             <button
               type="bu tton"
               className="btn delete-btn"
-              onClick={() => console.log("Delete Task")}
+              onClick={handleDelete}
             >
               Delete
             </button>

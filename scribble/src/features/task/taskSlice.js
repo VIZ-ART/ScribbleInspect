@@ -3,6 +3,11 @@ import { toast } from "react-toastify";
 import { customFetch } from "../../utils/axios";
 import { getObjectFromLocalStorage } from "../../utils/localStorage";
 import { logoutUser } from "../user/userSlice";
+import {
+  showLoading,
+  hideLoading,
+  getTeacherTasks,
+} from "../viewTasks/viewTasksSlice";
 
 const initialState = {
   isLoading: false,
@@ -80,6 +85,28 @@ export const createTask = createAsyncThunk(
   }
 );
 
+export const deleteTask = createAsyncThunk(
+  "task/deleteTask",
+  async (taskId, thunkAPI) => {
+    thunkAPI.dispatch(showLoading());
+    try {
+      const token = getObjectFromLocalStorage("token");
+      const resp = await customFetch.delete("/tasks/delete/" + taskId, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      });
+
+      thunkAPI.dispatch(getTeacherTasks());
+      console.log(resp);
+      return resp.data;
+    } catch (error) {
+      thunkAPI.dispatch(hideLoading());
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 const taskSlice = createSlice({
   name: "task",
   initialState,
@@ -109,6 +136,17 @@ const taskSlice = createSlice({
       toast.success("Created a new task");
     },
     [createTask.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      payload && toast.error(payload);
+    },
+    [deleteTask.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteTask.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.success(payload || "Deleted task");
+    },
+    [deleteTask.rejected]: (state, { payload }) => {
       state.isLoading = false;
       payload && toast.error(payload);
     },

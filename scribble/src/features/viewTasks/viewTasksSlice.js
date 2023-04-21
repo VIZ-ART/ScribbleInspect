@@ -43,7 +43,7 @@ export const getTeacherTasks = createAsyncThunk(
       const token = getObjectFromLocalStorage("token");
       const name = getObjectFromLocalStorage("user").name;
       const resp = await customFetch.get("/tasks/alltasks/" + name, {
-        // headers: { Authorization: `Bearer ${token.access}` },
+        headers: { Authorization: `Bearer ${token.access}` },
       });
       return resp.data;
     } catch (error) {
@@ -97,7 +97,6 @@ const viewTasksSlice = createSlice({
       state.isLoading = false;
       state.totalTasks = payload.length;
       state.numOfPages = Math.ceil(payload.length / 10);
-      console.log(payload);
       state.tasks = payload.map((item) => {
         return {
           id: item.id,
