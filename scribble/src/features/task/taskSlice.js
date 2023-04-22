@@ -12,6 +12,23 @@ import {
 const initialState = {
   isLoading: false,
   task: null,
+  subjectOptions: [
+    "Advanced Topics in Machine Learning",
+    "Algorithm Analysis and Design",
+    "Compiler Design",
+    "Comprehensive Course Work",
+    "Mini Project",
+    "Networking Lab",
+  ],
+  studentStatusOptions: [
+    "pending",
+    "submitted",
+    "missed",
+    "graded",
+    "requested",
+    "reviewed",
+  ],
+  teacherStatusOptions: ["ongoing", "completed", "grading", "graded"],
   isEditing: false,
   editTaskId: "",
 };
@@ -152,54 +169,59 @@ const taskSlice = createSlice({
     },
   },
 
-  extraReducers: {
-    [uploadFile.pending]: (state) => {
-      state.isLoading = true;
-      state.fileLink = null;
-    },
-    [uploadFile.fulfilled]: (state, { payload }) => {
-      const { data, callback } = payload;
-      const fileLink = data.pdf;
-      state.isLoading = false;
-      callback(fileLink);
-    },
-    [uploadFile.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      payload && toast.error(payload);
-    },
-    [createTask.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [createTask.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.success("Created a new task");
-    },
-    [createTask.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      payload && toast.error(payload);
-    },
-    [deleteTask.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [deleteTask.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.success(payload || "Deleted task");
-    },
-    [deleteTask.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      payload && toast.error(payload);
-    },
-    [editTask.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [editTask.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      if (payload.status === 200) toast.success("Edited task");
-    },
-    [editTask.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      payload && toast.error(payload);
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(uploadFile.pending, (state) => {
+        state.isLoading = true;
+        state.fileLink = null;
+      })
+      .addCase(uploadFile.fulfilled, (state, { payload }) => {
+        const { data, callback } = payload;
+        const fileLink = data.pdf;
+        state.isLoading = false;
+        callback(fileLink);
+      })
+      .addCase(uploadFile.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        payload && toast.error(payload);
+      })
+      .addCase(createTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createTask.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        toast.success("Created a new task");
+      })
+      .addCase(createTask.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        payload && toast.error(payload);
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTask.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        toast.success(payload || "Deleted task");
+      })
+      .addCase(deleteTask.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        payload && toast.error(payload);
+      })
+      .addCase(editTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(editTask.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.isEditing = false;
+        state.editTaskId = "";
+        if (payload.status === 200) toast.success("Edited task");
+      })
+      .addCase(editTask.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.isEditing = false;
+        state.editTaskId = "";
+        payload && toast.error(payload);
+      });
   },
 });
 

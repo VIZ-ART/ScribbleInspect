@@ -76,39 +76,40 @@ const userSlice = createSlice({
       }
     },
   },
-  extraReducers: {
-    [registerUser.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [registerUser.fulfilled]: (state, { payload }) => {
-      console.log(payload);
-      state.isLoading = false;
-      state.user = payload;
-      addObjectToLocalStorage("user", payload);
-      state.isTeacher = payload.user_type === "Teacher" ? true : false;
-      toast.success(`Hello There ${state.user.name.split(" ").shift()}`);
-    },
-    [registerUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
-    [loginUser.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [loginUser.fulfilled]: (state, { payload }) => {
-      const { token, user } = payload;
-      state.isLoading = false;
-      state.token = token;
-      state.user = user;
-      state.isTeacher = user.user_type === "Teacher" ? true : false;
-      addObjectToLocalStorage("token", token);
-      addObjectToLocalStorage("user", user);
-      toast.success(`Welcome Back ${user.name.split(" ").shift()}`);
-    },
-    [loginUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
+  extraReducers(builder) {
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(registerUser.fulfilled, (state, { payload }) => {
+        console.log(payload);
+        state.isLoading = false;
+        state.user = payload;
+        addObjectToLocalStorage("user", payload);
+        state.isTeacher = payload.user_type === "Teacher" ? true : false;
+        toast.success(`Hello There ${state.user.name.split(" ").shift()}`);
+      })
+      .addCase(registerUser.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, { payload }) => {
+        const { token, user } = payload;
+        state.isLoading = false;
+        state.token = token;
+        state.user = user;
+        state.isTeacher = user.user_type === "Teacher" ? true : false;
+        addObjectToLocalStorage("token", token);
+        addObjectToLocalStorage("user", user);
+        toast.success(`Welcome Back ${user.name.split(" ").shift()}`);
+      })
+      .addCase(loginUser.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      });
   },
 });
 

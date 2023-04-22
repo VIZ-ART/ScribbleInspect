@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormRow } from "../../components";
+import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -23,9 +23,8 @@ const initialState = {
 
 const AddTask = () => {
   const [values, setValues] = useState(initialState);
-  const { isLoading, isEditing, editTaskId, task } = useSelector(
-    (store) => store.task
-  );
+  const { isLoading, isEditing, editTaskId, task, subjectOptions } =
+    useSelector((store) => store.task);
   const taskRef = React.createRef();
   const answerKeyRef = React.createRef();
   const dispatch = useDispatch();
@@ -54,7 +53,7 @@ const AddTask = () => {
       return;
     }
     isEditing ? dispatch(editTask(values)) : dispatch(createTask(values));
-    // handleClear();
+    handleClear();
   };
 
   const handleClear = () => {
@@ -97,10 +96,11 @@ const AddTask = () => {
             handleChange={handleTaskInput}
           />
 
-          <FormRow
+          <FormRowSelect
             type="text"
             name="subjectName"
             labeltext="subject name"
+            options={subjectOptions}
             value={values.subjectName}
             handleChange={handleTaskInput}
           />
@@ -154,6 +154,7 @@ const AddTask = () => {
             >
               Clear
             </button>
+
             <button
               type="submit"
               className="btn btn-block submit-btn"

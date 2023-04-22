@@ -6,7 +6,7 @@ import { getObjectFromLocalStorage } from "../../utils/localStorage";
 const initialFiltersState = {
   search: "",
   searchStatus: "all",
-  statusOptions: ["pending", "submitted", "graded", "requested", "reviewed"],
+  searchSubject: "all",
   sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
@@ -64,61 +64,58 @@ const viewTasksSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
-    // getCurrentTaskDetails: (state, { id, callback }) => {
-    //   const task = state.tasks.find((item) => item.id === id);
-    //   callback(task);
-    // },
   },
-  extraReducers: {
-    [getAllTasks.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getAllTasks.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.totalTasks = payload.length;
-      state.numOfPages = Math.ceil(payload.length / 10);
-      state.tasks = payload.map((item) => {
-        return {
-          id: item.id,
-          taskName: item.name,
-          subjectName: item.subject,
-          teacherName: item.teacher,
-          maxMarks: item.max_marks,
-          endDate: item.end_date,
-          endTime: item.end_time,
-          task: item.task_pdf_link,
-        };
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllTasks.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllTasks.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.totalTasks = payload.length;
+        state.numOfPages = Math.ceil(payload.length / 10);
+        state.tasks = payload.map((item) => {
+          return {
+            id: item.id,
+            taskName: item.name,
+            subjectName: item.subject,
+            teacherName: item.teacher,
+            maxMarks: item.max_marks,
+            endDate: item.end_date,
+            endTime: item.end_time,
+            task: item.task_pdf_link,
+          };
+        });
+      })
+      .addCase(getAllTasks.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload || "Get task went wrong :)");
+      })
+      .addCase(getTeacherTasks.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTeacherTasks.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.totalTasks = payload.length;
+        state.numOfPages = Math.ceil(payload.length / 10);
+        state.tasks = payload.map((item) => {
+          return {
+            id: item.id,
+            taskName: item.name,
+            subjectName: item.subject,
+            teacherName: item.teacher,
+            maxMarks: item.max_marks,
+            endDate: item.end_date,
+            endTime: item.end_time,
+            task: item.task_pdf_link,
+            answerKey: item.answer_key_link,
+          };
+        });
+      })
+      .addCase(getTeacherTasks.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload || "Get task went wrong :)");
       });
-    },
-    [getAllTasks.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload || "Get task went wrong :)");
-    },
-    [getTeacherTasks.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getTeacherTasks.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.totalTasks = payload.length;
-      state.numOfPages = Math.ceil(payload.length / 10);
-      state.tasks = payload.map((item) => {
-        return {
-          id: item.id,
-          taskName: item.name,
-          subjectName: item.subject,
-          teacherName: item.teacher,
-          maxMarks: item.max_marks,
-          endDate: item.end_date,
-          endTime: item.end_time,
-          task: item.task_pdf_link,
-          answerKey: item.answer_key_link,
-        };
-      });
-    },
-    [getTeacherTasks.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload || "Get task went wrong :)");
-    },
   },
 });
 

@@ -13,6 +13,11 @@ const FormRowSelect = ({ name, value, handleChange, options, labeltext }) => {
         onChange={handleChange}
         className="form-select"
       >
+        {value || (
+          <option key="null" value={null}>
+            Select an option
+          </option>
+        )}
         {options.map((option, index) => {
           return (
             <option key={index} value={option}>
