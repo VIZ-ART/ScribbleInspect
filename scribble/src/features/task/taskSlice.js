@@ -12,6 +12,8 @@ import {
 const initialState = {
   isLoading: false,
   task: null,
+  isEditing: false,
+  editTaskId: "",
 };
 
 export const uploadFile = createAsyncThunk(
@@ -99,9 +101,40 @@ export const deleteTask = createAsyncThunk(
 
       thunkAPI.dispatch(getTeacherTasks());
       console.log(resp);
-      return resp.data;
+      return resp.status;
     } catch (error) {
       thunkAPI.dispatch(hideLoading());
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const editTask = createAsyncThunk(
+  "task/editTask",
+  async (task, thunkAPI) => {
+    try {
+      console.log(task.id);
+      const token = getObjectFromLocalStorage("token");
+      const resp = await customFetch.put(
+        "/tasks/edit/" + task.id,
+        {
+          name: task.taskName,
+          subject: task.subjectName,
+          teacher: task.teacherName,
+          max_marks: task.maxMarks,
+          end_date: task.endDate,
+          end_time: task.endTime,
+          task_pdf_link: task.task,
+          answer_key_link: task.answerKey,
+        },
+        {
+          headers: { Authorization: `Bearer ${token.access}` },
+        }
+      );
+
+      console.log(resp);
+      return resp;
+    } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
   }
@@ -111,7 +144,13 @@ const taskSlice = createSlice({
   name: "task",
   initialState,
 
-  reducers: {},
+  reducers: {
+    setEditingMode: (state, { payload }) => {
+      state.isEditing = true;
+      state.editTaskId = payload.id;
+      state.task = payload;
+    },
+  },
 
   extraReducers: {
     [uploadFile.pending]: (state) => {
@@ -150,7 +189,19 @@ const taskSlice = createSlice({
       state.isLoading = false;
       payload && toast.error(payload);
     },
+    [editTask.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [editTask.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      if (payload.status === 200) toast.success("Edited task");
+    },
+    [editTask.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      payload && toast.error(payload);
+    },
   },
 });
 
 export default taskSlice.reducer;
+export const { setEditingMode } = taskSlice.actions;

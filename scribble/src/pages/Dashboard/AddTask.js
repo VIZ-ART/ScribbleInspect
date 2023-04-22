@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { createTask, uploadFile } from "../../features/task/taskSlice";
+import {
+  createTask,
+  uploadFile,
+  editTask,
+} from "../../features/task/taskSlice";
 import { getObjectFromLocalStorage } from "../../utils/localStorage";
 
 const initialState = {
@@ -15,16 +19,22 @@ const initialState = {
   maxMarks: "",
   task: null,
   answerKey: null,
-  isEditing: false,
-  editTaskId: "",
 };
 
 const AddTask = () => {
   const [values, setValues] = useState(initialState);
-  const { isLoading } = useSelector((store) => store.task);
+  const { isLoading, isEditing, editTaskId, task } = useSelector(
+    (store) => store.task
+  );
   const taskRef = React.createRef();
   const answerKeyRef = React.createRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isEditing) {
+      setValues(task);
+    }
+  }, [dispatch, editTaskId, isEditing, task]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +53,7 @@ const AddTask = () => {
       toast.error("please upload all the files");
       return;
     }
-    dispatch(createTask(values));
+    isEditing ? dispatch(editTask(values)) : dispatch(createTask(values));
     // handleClear();
   };
 
@@ -77,7 +87,7 @@ const AddTask = () => {
   return (
     <Wrapper>
       <form className="form">
-        <h3>{values.isEditing ? "edit task" : "add task"}</h3>
+        <h3>{isEditing ? "edit task" : "add task"}</h3>
         <div className="form-center">
           <FormRow
             type="text"
@@ -150,7 +160,7 @@ const AddTask = () => {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              Create
+              {isEditing ? "Edit" : "Submit"}
             </button>
           </div>
         </div>
