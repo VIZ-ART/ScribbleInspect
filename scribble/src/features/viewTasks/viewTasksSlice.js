@@ -23,14 +23,24 @@ const initialState = {
 
 export const getAllTasks = createAsyncThunk(
   "tasks/getTasks",
-  async (thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
+      console.log("I'm here");
+      console.log(thunkAPI.getState());
+      const { search, searchStatus, searchSubject, sort, page } =
+        thunkAPI.getState().viewTasks;
+      console.log(search, searchStatus, searchSubject, sort, page);
+      // let url = /tasks/alltasks/?
       const token = getObjectFromLocalStorage("token");
-      const resp = await customFetch.get("/tasks/alltasks", {
-        headers: { Authorization: `Bearer ${token.access}` },
-      });
+      const resp = await customFetch.get(
+        `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`,
+        {
+          headers: { Authorization: `Bearer ${token.access}` },
+        }
+      );
       return resp.data;
     } catch (error) {
+      console.log("someting went wraang");
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
@@ -81,8 +91,8 @@ const viewTasksSlice = createSlice({
       })
       .addCase(getAllTasks.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.totalTasks = payload.length;
-        state.numOfPages = Math.ceil(payload.length / 10);
+        // state.totalTasks = payload.length;
+        // state.numOfPages = Math.ceil(payload.length / 10);
         state.tasks = payload.map((item) => {
           return {
             id: item.id,

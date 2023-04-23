@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaAlignLeft, FaUserCircle, FaCaretDown } from "react-icons/fa";
+import { FaAlignLeft, FaUserCircle, FaCaretDown } from "react-icons/fa";
 import Wrapper from "../assets/wrappers/Navbar";
 import Logo from "./Logo";
 import { useState } from "react";

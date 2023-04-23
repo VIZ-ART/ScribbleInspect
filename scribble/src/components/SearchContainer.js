@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   handleChange,
   clearFilters,
+  getAllTasks,
+  getTeacherTasks,
 } from "../features/viewTasks/viewTasksSlice";
 
 const SearchContainer = () => {
@@ -18,6 +20,7 @@ const SearchContainer = () => {
   const handleSearch = (e) => {
     if (isLoading) return;
     dispatch(handleChange({ name: e.target.name, value: e.target.value }));
+    isTeacher ? dispatch(getTeacherTasks()) : dispatch(getAllTasks());
   };
   const handleSubmit = (e) => {
     e.preventDefault();

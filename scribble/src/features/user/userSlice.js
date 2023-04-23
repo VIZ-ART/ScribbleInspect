@@ -13,7 +13,7 @@ const initialState = {
   user: getObjectFromLocalStorage("user"),
   token: getObjectFromLocalStorage("token"),
   isTeacher:
-    getObjectFromLocalStorage("user").user_type === "Teacher" ? true : false,
+    getObjectFromLocalStorage("user")?.user_type === "Teacher" ? true : false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -69,11 +69,7 @@ const userSlice = createSlice({
       state.isSidebarOpen = false;
       removeObjectFromLocalStorage("user");
       removeObjectFromLocalStorage("token");
-      if (message) {
-        if (type === "success") toast.success(message);
-        else if (type === "error") toast.error(message);
-        else if (type === "warning") toast.warning(message);
-      }
+      toast[type](message);
     },
   },
   extraReducers(builder) {
