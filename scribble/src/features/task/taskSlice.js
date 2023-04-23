@@ -17,8 +17,12 @@ const initialState = {
     "Algorithm Analysis and Design",
     "Compiler Design",
     "Comprehensive Course Work",
+    "Computer Graphics and Image Processing",
+    "Foundations of Machine Learning",
+    "Foundation of Security and Computing",
     "Mini Project",
     "Networking Lab",
+    "Programming in Python",
   ],
   studentStatusOptions: [
     "pending",

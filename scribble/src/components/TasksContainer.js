@@ -8,9 +8,12 @@ import {
   getAllTasks,
   getTeacherTasks,
 } from "../features/viewTasks/viewTasksSlice";
+import PageBtnContainer from "./PageBtnContainer";
 
 const TasksContainer = () => {
-  const { tasks, isLoading } = useSelector((store) => store.viewTasks);
+  const { tasks, isLoading, page, totalTasks, numOfPages } = useSelector(
+    (store) => store.viewTasks
+  );
   const { isTeacher } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
@@ -29,12 +32,15 @@ const TasksContainer = () => {
 
   return (
     <Wrapper>
-      <h5>Tasks info</h5>
+      <h5>
+        {totalTasks} task{tasks.length > 1 && "s"} found{" "}
+      </h5>
       <div className="tasks">
         {tasks.map((task) => {
           return <Task key={task.id} {...task} />;
         })}
       </div>
+      {numOfPages > 1 && <PageBtnContainer />}
     </Wrapper>
   );
 };

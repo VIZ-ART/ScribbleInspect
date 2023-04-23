@@ -14,8 +14,8 @@ const initialFiltersState = {
 const initialState = {
   isLoading: false,
   tasks: [],
-  totalTasks: 0,
-  numOfPages: 1,
+  totalTasks: 20,
+  numOfPages: 8,
   page: 1,
   stats: {},
   ...initialFiltersState,
@@ -64,6 +64,15 @@ const viewTasksSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
+    handleChange: (state, { payload: { name, value } }) => {
+      state[name] = value;
+    },
+    clearFilters: (state) => {
+      return { ...state, ...initialFiltersState };
+    },
+    changePage: (state, { payload }) => {
+      state.page = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -96,8 +105,8 @@ const viewTasksSlice = createSlice({
       })
       .addCase(getTeacherTasks.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.totalTasks = payload.length;
-        state.numOfPages = Math.ceil(payload.length / 10);
+        // state.totalTasks = payload.length;
+        // state.numOfPages = Math.ceil(payload.length / state.tasksPerPage);
         state.tasks = payload.map((item) => {
           return {
             id: item.id,
@@ -119,5 +128,11 @@ const viewTasksSlice = createSlice({
   },
 });
 
-export const { showLoading, hideLoading } = viewTasksSlice.actions;
+export const {
+  showLoading,
+  hideLoading,
+  handleChange,
+  clearFilters,
+  changePage,
+} = viewTasksSlice.actions;
 export default viewTasksSlice.reducer;
