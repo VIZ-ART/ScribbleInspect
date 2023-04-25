@@ -8,6 +8,7 @@ import { loginUser, registerUser } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
+  id: "",
   userName: "",
   email: "",
   password: "",
@@ -59,7 +60,7 @@ function Register() {
         navigate("/");
       }, 3000);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <Wrapper className="full-page">

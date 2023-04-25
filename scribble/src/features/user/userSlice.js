@@ -13,7 +13,7 @@ const initialState = {
   user: getObjectFromLocalStorage("user"),
   token: getObjectFromLocalStorage("token"),
   isTeacher:
-    getObjectFromLocalStorage("user")?.user_type === "Teacher" ? true : false,
+    getObjectFromLocalStorage("user")?.userType === "Teacher" ? true : false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -21,11 +21,19 @@ export const registerUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const resp = await customFetch.post("/users/register", {
-        ...user,
         name: user.userName,
+        email: user.email,
+        password: user.password,
         user_type: user.userType,
       });
-      return resp.data;
+      let token = null;
+      if (resp.status === 201) {
+        token = await customFetch.post("/token/", {
+          email: user.email,
+          password: user.password,
+        });
+      }
+      return { data: resp.data, token: token.data };
     } catch (error) {
       return thunkAPI.rejectWithValue(
         Object.values(error.response.data).shift().shift()
@@ -42,7 +50,7 @@ export const loginUser = createAsyncThunk(
       const Response = { token: tokenResp.data };
 
       if (tokenResp.status === 200) {
-        const userResponse = await customFetch.get("/users/me", {
+        const userResponse = await customFetch.get("/users/login", {
           headers: { Authorization: `Bearer ${Response.token.access}` },
         });
 
@@ -78,12 +86,20 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
+        const { data, token } = payload;
+        const user = {
+          userName: data.name,
+          email: data.email,
+          userType: data.user_type,
+          id: data.id,
+        };
         console.log(payload);
         state.isLoading = false;
-        state.user = payload;
-        addObjectToLocalStorage("user", payload);
-        state.isTeacher = payload.user_type === "Teacher" ? true : false;
-        toast.success(`Hello There ${state.user.name.split(" ").shift()}`);
+        state.user = user;
+        addObjectToLocalStorage("user", user);
+        addObjectToLocalStorage("token", token);
+        state.isTeacher = user.userType === "Teacher" ? true : false;
+        toast.success(`Hello There ${user.userName.split(" ").shift()}`);
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -96,8 +112,9 @@ const userSlice = createSlice({
         const { token, user } = payload;
         state.isLoading = false;
         state.token = token;
+        console.log(user);
         state.user = user;
-        state.isTeacher = user.user_type === "Teacher" ? true : false;
+        state.isTeacher = user.userType === "Teacher" ? true : false;
         addObjectToLocalStorage("token", token);
         addObjectToLocalStorage("user", user);
         toast.success(`Welcome Back ${user.name.split(" ").shift()}`);
