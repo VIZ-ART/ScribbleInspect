@@ -30,14 +30,13 @@ export const getAllTasks = createAsyncThunk(
       const { search, searchStatus, searchSubject, sort, page } =
         thunkAPI.getState().viewTasks;
       console.log(search, searchStatus, searchSubject, sort, page);
-      // let url = /tasks/alltasks/?
+
+      let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`;
+      search && (url = url + `&search=${search}`);
       const token = getObjectFromLocalStorage("token");
-      const resp = await customFetch.get(
-        `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`,
-        {
-          headers: { Authorization: `Bearer ${token.access}` },
-        }
-      );
+      const resp = await customFetch.get(url, {
+        headers: { Authorization: `Bearer ${token.access}` },
+      });
       return resp.data;
     } catch (error) {
       console.log("someting went wraang");

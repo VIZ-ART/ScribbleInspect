@@ -12,7 +12,7 @@ import { getObjectFromLocalStorage } from "../../utils/localStorage";
 
 const initialState = {
   taskName: "",
-  teacherName: getObjectFromLocalStorage("user")?.name,
+  teacherName: getObjectFromLocalStorage("user")?.userName,
   subjectName: "",
   endDate: "",
   endTime: "",
@@ -52,6 +52,7 @@ const AddTask = () => {
       toast.error("please upload all the files");
       return;
     }
+
     isEditing ? dispatch(editTask(values)) : dispatch(createTask(values));
     handleClear();
   };
