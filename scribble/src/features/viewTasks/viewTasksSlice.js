@@ -50,8 +50,8 @@ export const getTeacherTasks = createAsyncThunk(
   async (thunkAPI) => {
     try {
       const token = getObjectFromLocalStorage("token");
-      const name = getObjectFromLocalStorage("user").name;
-      const resp = await customFetch.get("/tasks/alltasks/" + name, {
+      const id = getObjectFromLocalStorage("user").id;
+      const resp = await customFetch.get("/tasks/alltasks/" + id, {
         headers: { Authorization: `Bearer ${token.access}` },
       });
       return resp.data;

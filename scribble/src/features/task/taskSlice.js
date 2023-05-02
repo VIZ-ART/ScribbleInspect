@@ -77,12 +77,13 @@ export const createTask = createAsyncThunk(
   async (task, thunkAPI) => {
     try {
       const token = getObjectFromLocalStorage("token");
+      const user = getObjectFromLocalStorage("user");
       const resp = await customFetch.post(
         "/tasks/addtask",
         {
           name: task.taskName,
           subject: task.subjectName,
-          teacher: task.teacherName,
+          teacher: user.id,
           max_marks: task.maxMarks,
           end_date: task.endDate,
           end_time: task.endTime,

@@ -54,7 +54,7 @@ export const loginUser = createAsyncThunk(
           headers: { Authorization: `Bearer ${Response.token.access}` },
         });
 
-        Response.user = userResponse.data;
+        Response.data = userResponse.data;
       }
 
       return Response;
@@ -109,15 +109,21 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, { payload }) => {
-        const { token, user } = payload;
+        const { token, data } = payload;
         state.isLoading = false;
         state.token = token;
+        const user = {
+          userName: data.name,
+          email: data.email,
+          userType: data.user_type,
+          id: data.id,
+        };
         console.log(user);
         state.user = user;
         state.isTeacher = user.userType === "Teacher" ? true : false;
         addObjectToLocalStorage("token", token);
         addObjectToLocalStorage("user", user);
-        toast.success(`Welcome Back ${user.name.split(" ").shift()}`);
+        toast.success(`Welcome Back ${user.userName.split(" ").shift()}`);
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.isLoading = false;
