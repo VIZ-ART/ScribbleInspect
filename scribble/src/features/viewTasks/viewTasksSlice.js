@@ -14,8 +14,8 @@ const initialFiltersState = {
 const initialState = {
   isLoading: false,
   tasks: [],
-  totalTasks: 20,
-  numOfPages: 8,
+  totalTasks: 0,
+  numOfPages: 1,
   page: 1,
   stats: {},
   ...initialFiltersState,
@@ -25,14 +25,15 @@ export const getAllTasks = createAsyncThunk(
   "tasks/getTasks",
   async (_, thunkAPI) => {
     try {
-      console.log("I'm here");
-      console.log(thunkAPI.getState());
       const { search, searchStatus, searchSubject, sort, page } =
         thunkAPI.getState().viewTasks;
-      console.log(search, searchStatus, searchSubject, sort, page);
 
-      let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`;
-      search && (url = url + `&search=${search}`);
+      // let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`;
+
+      // search && (url = url + `&search=${search}`);
+
+      console.log("page", page);
+      let url = `/tasks/alltasks/?page=${page}`;
       const token = getObjectFromLocalStorage("token");
       const resp = await customFetch.get(url, {
         headers: { Authorization: `Bearer ${token.access}` },
@@ -47,18 +48,20 @@ export const getAllTasks = createAsyncThunk(
 
 export const getTeacherTasks = createAsyncThunk(
   "tasks/getTeacherTasks",
-  async (thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
       const token = getObjectFromLocalStorage("token");
       const id = getObjectFromLocalStorage("user").id;
-      const resp = await customFetch.get("/tasks/alltasks/" + id, {
+      const { search, searchStatus, searchSubject, sort, page } =
+        thunkAPI.getState().viewTasks;
+      let url = `/tasks/gettasks/${id}?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`;
+      search && (url = url + `&search=${search}`);
+      const resp = await customFetch.get(url, {
         headers: { Authorization: `Bearer ${token.access}` },
       });
       return resp.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response.data.detail.shift().shift()
-      );
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -80,6 +83,7 @@ const viewTasksSlice = createSlice({
       return { ...state, ...initialFiltersState };
     },
     changePage: (state, { payload }) => {
+      console.log("change page to ", payload);
       state.page = payload;
     },
   },
@@ -90,9 +94,9 @@ const viewTasksSlice = createSlice({
       })
       .addCase(getAllTasks.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        // state.totalTasks = payload.length;
-        // state.numOfPages = Math.ceil(payload.length / 10);
-        state.tasks = payload.map((item) => {
+        state.totalTasks = payload.count;
+        state.numOfPages = payload.num_pages;
+        state.tasks = payload.results.map((item) => {
           return {
             id: item.id,
             taskName: item.name,
@@ -102,6 +106,7 @@ const viewTasksSlice = createSlice({
             endDate: item.end_date,
             endTime: item.end_time,
             task: item.task_pdf_link,
+            answerKey: item.answer_key_link,
           };
         });
       })
@@ -114,9 +119,9 @@ const viewTasksSlice = createSlice({
       })
       .addCase(getTeacherTasks.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        // state.totalTasks = payload.length;
-        // state.numOfPages = Math.ceil(payload.length / state.tasksPerPage);
-        state.tasks = payload.map((item) => {
+        state.totalTasks = payload.count;
+        state.numOfPages = payload.num_pages;
+        state.tasks = payload.results.map((item) => {
           return {
             id: item.id,
             taskName: item.name,
@@ -132,6 +137,7 @@ const viewTasksSlice = createSlice({
       })
       .addCase(getTeacherTasks.rejected, (state, { payload }) => {
         state.isLoading = false;
+        console.log(payload);
         toast.error(payload || "Get task went wrong :)");
       });
   },

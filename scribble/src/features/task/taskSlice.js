@@ -123,7 +123,7 @@ export const deleteTask = createAsyncThunk(
 
       thunkAPI.dispatch(getTeacherTasks());
       console.log(resp);
-      return resp.status;
+      return resp.data;
     } catch (error) {
       thunkAPI.dispatch(hideLoading());
       return thunkAPI.rejectWithValue(error.response);
@@ -135,14 +135,14 @@ export const editTask = createAsyncThunk(
   "task/editTask",
   async (task, thunkAPI) => {
     try {
-      console.log(task.id);
       const token = getObjectFromLocalStorage("token");
+      const user = getObjectFromLocalStorage("user");
       const resp = await customFetch.put(
         "/tasks/edit/" + task.id,
         {
           name: task.taskName,
           subject: task.subjectName,
-          teacher: task.teacherName,
+          teacher: user.id,
           max_marks: task.maxMarks,
           end_date: task.endDate,
           end_time: task.endTime,
@@ -154,7 +154,6 @@ export const editTask = createAsyncThunk(
         }
       );
 
-      console.log(resp);
       return resp;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);

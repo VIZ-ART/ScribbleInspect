@@ -2,20 +2,30 @@ import React from "react";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 import Wrapper from "../assets/wrappers/PageBtnContainer";
 import { useSelector, useDispatch } from "react-redux";
-import { changePage } from "../features/viewTasks/viewTasksSlice";
+import {
+  changePage,
+  getAllTasks,
+  getTeacherTasks,
+} from "../features/viewTasks/viewTasksSlice";
 
 const PageBtnContainer = () => {
   const { numOfPages, page } = useSelector((store) => store.viewTasks);
+  const { isTeacher } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   const pages = Array.from({ length: numOfPages }, (_, index) => index + 1);
+
+  const changePageFn = (page) => {
+    dispatch(changePage(page));
+    isTeacher ? dispatch(getTeacherTasks()) : dispatch(getAllTasks());
+  };
 
   const nextPage = () => {
     let newPage = page + 1;
     if (newPage > numOfPages) {
       newPage = 1;
     }
-    dispatch(changePage(newPage));
+    changePageFn(newPage);
   };
 
   const prevPage = () => {
@@ -23,7 +33,7 @@ const PageBtnContainer = () => {
     if (newPage < 1) {
       newPage = numOfPages;
     }
-    dispatch(changePage(newPage));
+    changePageFn(newPage);
   };
 
   return (
@@ -39,7 +49,7 @@ const PageBtnContainer = () => {
               type="button"
               className={pageNumber === page ? "pageBtn active" : "pageBtn"}
               key={pageNumber}
-              onClick={() => dispatch(changePage(pageNumber))}
+              onClick={() => changePageFn(pageNumber)}
             >
               {pageNumber}
             </button>

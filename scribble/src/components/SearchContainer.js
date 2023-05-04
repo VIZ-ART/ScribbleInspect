@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { FormRow, FormRowSelect } from ".";
 import Wrapper from "../assets/wrappers/SearchContainer";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   handleChange,
@@ -12,7 +12,7 @@ import {
 
 const SearchContainer = () => {
   const { isTeacher } = useSelector((store) => store.user);
-  const { isLoading, search, searchStatus, searchSubject, sort, sortOptions } =
+  const { isLoading, searchStatus, searchSubject, sort, sortOptions } =
     useSelector((store) => store.viewTasks);
   const { studentStatusOptions, teacherStatusOptions, subjectOptions } =
     useSelector((store) => store.task);
@@ -23,16 +23,17 @@ const SearchContainer = () => {
     dispatch(handleChange({ name: e.target.name, value: e.target.value }));
   };
 
-  const debounce = () => {
+  const debounce = useCallback(() => {
     let timeoutID;
     return (e) => {
       setLocalSearch(e.target.value);
       clearTimeout(timeoutID);
       timeoutID = setTimeout(() => {
         dispatch(handleChange({ name: e.target.name, value: e.target.value }));
-      }, 1000);
+        dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
+      }, 5000);
     };
-  };
+  }, [dispatch, isTeacher, setLocalSearch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +41,7 @@ const SearchContainer = () => {
     dispatch(clearFilters());
   };
 
-  const optimizedDebounce = useMemo(() => debounce(), []);
+  const optimizedDebounce = debounce();
 
   return (
     <Wrapper>
