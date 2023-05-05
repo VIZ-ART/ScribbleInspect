@@ -11,7 +11,7 @@ import {
 import PageBtnContainer from "./PageBtnContainer";
 
 const TasksContainer = () => {
-  const { tasks, isLoading, page, totalTasks, numOfPages } = useSelector(
+  const { tasks, isLoading, totalTasks, numOfPages } = useSelector(
     (store) => store.viewTasks
   );
   const { isTeacher } = useSelector((store) => store.user);

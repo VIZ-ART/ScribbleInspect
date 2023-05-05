@@ -8,7 +8,7 @@ const initialFiltersState = {
   searchStatus: "all",
   searchSubject: "all",
   sort: "latest",
-  sortOptions: ["latest", "oldest", "a-z", "z-a"],
+  sortOptions: ["latest", "oldest", "nearest", "farthest", "a-z", "z-a"],
 };
 
 const initialState = {
@@ -32,8 +32,9 @@ export const getAllTasks = createAsyncThunk(
 
       // search && (url = url + `&search=${search}`);
 
-      console.log("page", page);
-      let url = `/tasks/alltasks/?page=${page}`;
+      let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&sort=${sort}&page=${page}`;
+      search && (url = url + `&search=${search}`);
+      console.log(url);
       const token = getObjectFromLocalStorage("token");
       const resp = await customFetch.get(url, {
         headers: { Authorization: `Bearer ${token.access}` },
@@ -54,7 +55,7 @@ export const getTeacherTasks = createAsyncThunk(
       const id = getObjectFromLocalStorage("user").id;
       const { search, searchStatus, searchSubject, sort, page } =
         thunkAPI.getState().viewTasks;
-      let url = `/tasks/gettasks/${id}?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`;
+      let url = `/tasks/gettasks/${id}?status=${searchStatus}&subject=${searchSubject}&sort=${sort}&page=${page}`;
       search && (url = url + `&search=${search}`);
       const resp = await customFetch.get(url, {
         headers: { Authorization: `Bearer ${token.access}` },

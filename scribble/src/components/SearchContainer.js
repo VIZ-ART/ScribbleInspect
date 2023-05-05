@@ -21,6 +21,7 @@ const SearchContainer = () => {
 
   const handleSearch = (e) => {
     dispatch(handleChange({ name: e.target.name, value: e.target.value }));
+    dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
   };
 
   const debounce = useCallback(() => {
@@ -31,7 +32,7 @@ const SearchContainer = () => {
       timeoutID = setTimeout(() => {
         dispatch(handleChange({ name: e.target.name, value: e.target.value }));
         dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
-      }, 5000);
+      }, 500);
     };
   }, [dispatch, isTeacher, setLocalSearch]);
 
