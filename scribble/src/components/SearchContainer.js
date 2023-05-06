@@ -8,6 +8,7 @@ import {
   clearFilters,
   getAllTasks,
   getTeacherTasks,
+  changePage,
 } from "../features/viewTasks/viewTasksSlice";
 
 const SearchContainer = () => {
@@ -21,6 +22,7 @@ const SearchContainer = () => {
 
   const handleSearch = (e) => {
     dispatch(handleChange({ name: e.target.name, value: e.target.value }));
+    dispatch(changePage(1));
     dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
   };
 
@@ -40,6 +42,7 @@ const SearchContainer = () => {
     e.preventDefault();
     setLocalSearch("");
     dispatch(clearFilters());
+    dispatch(changePage(1));
     dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
   };
 

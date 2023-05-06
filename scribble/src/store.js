@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./features/user/userSlice";
 import taskSlice from "./features/task/taskSlice";
 import viewTasksSlice from "./features/viewTasks/viewTasksSlice";
+import submissionSlice from "./features/submission/submissionSlice";
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
     task: taskSlice,
     viewTasks: viewTasksSlice,
+    submission: submissionSlice,
   },
 
   middleware: (getDefaultMiddleware) =>

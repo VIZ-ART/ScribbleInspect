@@ -7,6 +7,7 @@ import TaskInfo from "./TaskInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTask } from "../features/task/taskSlice";
 import { setEditingMode } from "../features/task/taskSlice";
+import { setSubmissionMode } from "../features/submission/submissionSlice";
 
 const Task = ({
   id,
@@ -53,7 +54,7 @@ const Task = ({
     window.open(fileLink, "_blank");
   };
 
-  const handleEdit = (e) => {
+  const handleEdit = () => {
     console.log("handleEdit triggered, ", id);
     dispatch(
       setEditingMode({
@@ -66,6 +67,18 @@ const Task = ({
         endTime,
         task,
         answerKey,
+      })
+    );
+  };
+
+  const handleUpload = () => {
+    console.log("handleUpload triggered,  ", id);
+    dispatch(
+      setSubmissionMode({
+        id,
+        taskName,
+        teacherName,
+        subjectName,
       })
     );
   };
@@ -116,13 +129,13 @@ const Task = ({
             )}
 
             {!isTeacher && (
-              <button
-                type="button"
+              <Link
+                to="/submit-task"
                 className="btn edit-btn"
-                onClick={() => console.log("Upload Button clicked")}
+                onClick={handleUpload}
               >
                 Upload
-              </button>
+              </Link>
             )}
 
             {isTeacher && (

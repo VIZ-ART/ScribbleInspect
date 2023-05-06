@@ -170,6 +170,7 @@ const taskSlice = createSlice({
       state.isEditing = true;
       state.editTaskId = payload.id;
       state.task = payload;
+      console.log(state);
     },
   },
 

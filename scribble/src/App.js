@@ -10,6 +10,7 @@ import {
   Results,
   SharedLayout,
 } from "./pages/Dashboard";
+import SubmitTask from "./pages/Dashboard/SubmitTask";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route index element={<Stats />} />
           <Route path="view-tasks" element={<ViewTasks />} />
           <Route path="add-task" element={<AddTask />} />
+          <Route path="submit-task" element={<SubmitTask />} />
           <Route path="results" element={<Results />} />
           <Route path="profile" element={<Profile />} />
         </Route>

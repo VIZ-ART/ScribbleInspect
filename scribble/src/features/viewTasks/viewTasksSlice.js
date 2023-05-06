@@ -30,7 +30,6 @@ export const getAllTasks = createAsyncThunk(
 
       let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&sort=${sort}&page=${page}`;
       search && (url = url + `&search=${search}`);
-      console.log(url);
       const token = getObjectFromLocalStorage("token");
       const resp = await customFetch.get(url, {
         headers: { Authorization: `Bearer ${token.access}` },

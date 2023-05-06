@@ -8,9 +8,10 @@ const NavLinks = ({ toggleSidebar }) => {
   return (
     <div className="nav-links">
       {links.map((link) => {
-        const { text, path, id, icon, restricted } = link;
+        const { text, path, id, icon, forTeacher, forStudent } = link;
 
-        if (restricted && !isTeacher) return;
+        if ((forTeacher && !isTeacher) || (forStudent && isTeacher))
+          return null;
 
         return (
           <NavLink
