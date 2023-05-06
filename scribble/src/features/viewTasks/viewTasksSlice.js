@@ -28,10 +28,6 @@ export const getAllTasks = createAsyncThunk(
       const { search, searchStatus, searchSubject, sort, page } =
         thunkAPI.getState().viewTasks;
 
-      // let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&page=${page}&sort=${sort}`;
-
-      // search && (url = url + `&search=${search}`);
-
       let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&sort=${sort}&page=${page}`;
       search && (url = url + `&search=${search}`);
       console.log(url);
@@ -133,6 +129,7 @@ const viewTasksSlice = createSlice({
             endTime: item.end_time,
             task: item.task_pdf_link,
             answerKey: item.answer_key_link,
+            status: item.teacher_status,
           };
         });
       })

@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, toggleSidebar } from "../features/user/userSlice";
+import { clearFilters } from "../features/viewTasks/viewTasksSlice";
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
@@ -41,6 +42,7 @@ const Navbar = () => {
               type="button"
               className="dropdown-btn"
               onClick={() => {
+                dispatch(clearFilters());
                 dispatch(
                   logoutUser({ type: "success", message: "Logging out..." })
                 );

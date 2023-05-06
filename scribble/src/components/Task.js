@@ -18,6 +18,7 @@ const Task = ({
   endTime,
   task,
   answerKey = null,
+  status,
 }) => {
   const dispatch = useDispatch();
   const { isTeacher } = useSelector((store) => store.user);
@@ -89,7 +90,7 @@ const Task = ({
             icon={<IoShieldCheckmarkSharp />}
             text={`${maxMarks} marks`}
           />
-          <div className={`status pending`}>pending</div>
+          <div className={`status ${status}`}>{status}</div>
         </div>
 
         <footer>

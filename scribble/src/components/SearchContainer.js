@@ -32,7 +32,7 @@ const SearchContainer = () => {
       timeoutID = setTimeout(() => {
         dispatch(handleChange({ name: e.target.name, value: e.target.value }));
         dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
-      }, 500);
+      }, 1000);
     };
   }, [dispatch, isTeacher, setLocalSearch]);
 
@@ -40,6 +40,7 @@ const SearchContainer = () => {
     e.preventDefault();
     setLocalSearch("");
     dispatch(clearFilters());
+    dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
   };
 
   const optimizedDebounce = debounce();

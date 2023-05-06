@@ -37,6 +37,7 @@ const TasksContainer = () => {
       </h5>
       <div className="tasks">
         {tasks.map((task) => {
+          console.log(task);
           return <Task key={task.id} {...task} />;
         })}
       </div>
