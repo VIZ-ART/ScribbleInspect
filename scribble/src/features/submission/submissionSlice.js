@@ -53,13 +53,20 @@ export const submitTask = createAsyncThunk(
   async (submission, thunkAPI) => {
     try {
       const token = getObjectFromLocalStorage("token").access;
-      const id = getObjectFromLocalStorage("user").id;
-      const { teacherId, taskId } = thunkAPI.getState().submission;
-      const resp = await customFetch.patch("/tasks/submit", {
-        task_id: taskId,
-        teacher_id: teacherId,
-        submission: submission,
-      });
+      const userId = getObjectFromLocalStorage("user").id;
+      const { taskId } = thunkAPI.getState().submission;
+      console.log(submission);
+      const resp = await customFetch.patch(
+        "/tasks/submit/",
+        {
+          task_id: taskId,
+          stud_id: userId,
+          submission_link: submission,
+        },
+        {
+          Authorization: `Bearer ${token.access}`,
+        }
+      );
 
       return resp;
     } catch (error) {

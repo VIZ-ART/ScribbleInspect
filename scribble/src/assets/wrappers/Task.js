@@ -41,21 +41,31 @@ const Wrapper = styled.article`
       letter-spacing: var(--letterSpacing);
     }
   }
-  .pending {
-    background: #fcefc7;
-    color: #e9b949;
-  }
+  .pending,
   .ongoing {
     background: #fcefc7;
     color: #e9b949;
   }
-  .interview {
+  .submitted,
+  .completed {
+    background: #d3f9d8;
+    color: #32cd32;
+  }
+  .ended {
+    background: #ffe6e6;
+    color: #d9534f;
+  }
+  .graded {
     background: #e0e8f9;
     color: #647acb;
   }
-  .declined {
-    color: #d66a6a;
-    background: #ffeeee;
+  .requested {
+    background: #f5f5f5;
+    color: #666;
+  }
+  .reviewed {
+    background: #f9e6ff;
+    color: #722ed1;
   }
   .content {
     padding: 1rem 1.5rem;

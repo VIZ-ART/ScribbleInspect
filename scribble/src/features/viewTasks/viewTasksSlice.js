@@ -27,10 +27,11 @@ export const getAllTasks = createAsyncThunk(
     try {
       const { search, searchStatus, searchSubject, sort, page } =
         thunkAPI.getState().viewTasks;
-
-      let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&sort=${sort}&page=${page}`;
-      search && (url = url + `&search=${search}`);
       const token = getObjectFromLocalStorage("token");
+      const id = getObjectFromLocalStorage("user").id;
+
+      let url = `/tasks/alltasks/?status=${searchStatus}&subject=${searchSubject}&sort=${sort}&page=${page}&student=${id}`;
+      search && (url = url + `&search=${search}`);
       const resp = await customFetch.get(url, {
         headers: { Authorization: `Bearer ${token.access}` },
       });
@@ -103,6 +104,7 @@ const viewTasksSlice = createSlice({
             endTime: item.end_time,
             task: item.task_pdf_link,
             answerKey: item.answer_key_link,
+            status: item.status,
           };
         });
       })

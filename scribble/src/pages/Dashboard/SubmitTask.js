@@ -3,7 +3,10 @@ import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { uploadFile } from "../../features/submission/submissionSlice";
+import {
+  submitTask,
+  uploadFile,
+} from "../../features/submission/submissionSlice";
 
 const SubmitTask = () => {
   const [submission, setSubmission] = useState("");
@@ -15,7 +18,9 @@ const SubmitTask = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!submission) toast.error("please upload the file");
+    if (!taskName) toast.error("please select a task to submit");
+    else if (!submission) toast.error("please upload the file");
+    dispatch(submitTask(submission));
   };
 
   const handleClear = () => {
