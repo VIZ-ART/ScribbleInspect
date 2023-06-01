@@ -42,6 +42,10 @@ html {
   --red-dark: #842029;
   --green-light: #d1e7dd;
   --green-dark: #0f5132;
+  --blue-light: #bee1f4;
+  --blue-dark: #0c5460;
+  --purple-light: #e5d7f2;
+  --purple-dark: #603c82;
 
   /* fonts  */
   --headingFont: "Roboto Condensed", Sans-Serif;

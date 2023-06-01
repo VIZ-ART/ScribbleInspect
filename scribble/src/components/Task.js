@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Task";
 import TaskInfo from "./TaskInfo";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTask } from "../features/task/taskSlice";
+import { deleteTask, gradeTask } from "../features/task/taskSlice";
 import { setEditingMode } from "../features/task/taskSlice";
 import { setSubmissionMode } from "../features/submission/submissionSlice";
 
@@ -54,6 +54,8 @@ const Task = ({
     window.open(fileLink, "_blank");
   };
 
+  console.log(taskName, status);
+
   const handleEdit = () => {
     console.log("handleEdit triggered, ", id);
     dispatch(
@@ -79,6 +81,15 @@ const Task = ({
         taskName,
         teacherName,
         subjectName,
+      })
+    );
+  };
+
+  const handleGrade = () => {
+    console.log("handleGrade triggered, ", id);
+    dispatch(
+      gradeTask({
+        id,
       })
     );
   };
@@ -128,7 +139,7 @@ const Task = ({
               </button>
             )}
 
-            {!isTeacher && (
+            {!isTeacher && status === "pending" && (
               <Link
                 to="/submit-task"
                 className="btn edit-btn"
@@ -148,13 +159,33 @@ const Task = ({
               </Link>
             )}
 
-            {!isTeacher && (
+            {!isTeacher && status === "submitted" && (
+              <button
+                type="button"
+                className="btn edit-btn"
+                onClick={() => console.log("View submission")}
+              >
+                View
+              </button>
+            )}
+
+            {!isTeacher && status === "submitted" && (
               <button
                 type="button"
                 className="btn delete-btn"
                 onClick={() => console.log("Delete submission")}
               >
                 Delete
+              </button>
+            )}
+
+            {isTeacher && status === "completed" && (
+              <button
+                type="button"
+                className="btn grade-btn"
+                onClick={handleGrade}
+              >
+                Grade
               </button>
             )}
 

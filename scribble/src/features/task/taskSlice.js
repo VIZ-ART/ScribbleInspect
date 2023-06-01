@@ -156,7 +156,28 @@ export const editTask = createAsyncThunk(
 
       return resp;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const gradeTask = createAsyncThunk(
+  "task/gradeTask",
+  async (task, thunkAPI) => {
+    try {
+      const token = getObjectFromLocalStorage("token");
+      console.log();
+      const resp = await customFetch.post(
+        "/tasks/grade/",
+        {
+          task_id: task.id,
+        },
+        { headers: { Authorization: `Bearer ${token.access}` } }
+      );
+
+      return resp;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
 );
@@ -225,6 +246,17 @@ const taskSlice = createSlice({
         state.isLoading = false;
         state.isEditing = false;
         state.editTaskId = "";
+        payload && toast.error(payload);
+      })
+      .addCase(gradeTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(gradeTask.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        if (payload.status === 200) toast.success("Graded task");
+      })
+      .addCase(gradeTask.rejected, (state, { payload }) => {
+        state.isLoading = false;
         payload && toast.error(payload);
       });
   },

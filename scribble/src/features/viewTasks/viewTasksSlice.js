@@ -80,7 +80,6 @@ const viewTasksSlice = createSlice({
       return { ...state, ...initialFiltersState };
     },
     changePage: (state, { payload }) => {
-      console.log("change page to ", payload);
       state.page = payload;
     },
   },
@@ -130,7 +129,7 @@ const viewTasksSlice = createSlice({
             endTime: item.end_time,
             task: item.task_pdf_link,
             answerKey: item.answer_key_link,
-            status: item.teacher_status,
+            status: item.status,
           };
         });
       })
