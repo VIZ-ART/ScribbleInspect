@@ -54,8 +54,6 @@ const Task = ({
     window.open(fileLink, "_blank");
   };
 
-  console.log(taskName, status);
-
   const handleEdit = () => {
     console.log("handleEdit triggered, ", id);
     dispatch(

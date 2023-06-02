@@ -3,6 +3,7 @@ import userSlice from "./features/user/userSlice";
 import taskSlice from "./features/task/taskSlice";
 import viewTasksSlice from "./features/viewTasks/viewTasksSlice";
 import submissionSlice from "./features/submission/submissionSlice";
+import statsSlice from "./features/stats/statsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     task: taskSlice,
     viewTasks: viewTasksSlice,
     submission: submissionSlice,
+    stats: statsSlice,
   },
 
   middleware: (getDefaultMiddleware) =>

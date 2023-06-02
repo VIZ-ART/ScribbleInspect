@@ -7,6 +7,8 @@ import SmallSidebar from "./SmallSidebar";
 import SearchContainer from "./SearchContainer";
 import TasksContainer from "./TasksContainer";
 import Task from "./Task";
+import StatsContainer from "./StatsContainer";
+import Loading from "./Loading";
 
 export {
   Logo,
@@ -18,4 +20,6 @@ export {
   SearchContainer,
   TasksContainer,
   Task,
+  StatsContainer,
+  Loading,
 };
