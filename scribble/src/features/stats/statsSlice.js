@@ -8,6 +8,8 @@ const initialState = {
   pendingTasks: null,
   submittedTasks: null,
   gradedTasks: null,
+  ongoingTasks: null,
+  completedTasks: null,
 };
 
 export const getStats = createAsyncThunk(
@@ -22,7 +24,7 @@ export const getStats = createAsyncThunk(
         },
       };
       const resp = await customFetch.get(
-        "/tasks/stats/student/" + user.id,
+        "/tasks/stats/" + user.id,
         axiosConfig
       );
       return resp.data;
@@ -43,9 +45,11 @@ const statsSlice = createSlice({
       })
       .addCase(getStats.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.pendingTasks = payload.pending_count;
-        state.submittedTasks = payload.submitted_count;
-        state.gradedTasks = payload.graded_count;
+        state.pendingTasks = payload.pending_count || null;
+        state.submittedTasks = payload.submitted_count || null;
+        state.gradedTasks = payload.graded_count || null;
+        state.completedTasks = payload.completed_count || null;
+        state.ongoingTasks = payload.ongoing_count || null;
       })
       .addCase(getStats.rejected, (state, { payload }) => {
         state.isLoading = false;

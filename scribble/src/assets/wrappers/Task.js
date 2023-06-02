@@ -51,7 +51,8 @@ const Wrapper = styled.article`
     background: #d3f9d8;
     color: #32cd32;
   }
-  .ended {
+  .ended,
+  .missed {
     background: #ffe6e6;
     color: #d9534f;
   }

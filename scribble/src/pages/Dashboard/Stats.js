@@ -5,19 +5,18 @@ import { getStats } from "../../features/stats/statsSlice";
 
 const Stats = () => {
   const { isLoading } = useSelector((store) => store.stats);
+  const { isTeacher } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getStats());
   }, []);
 
-  if (isLoading) {
-    return <Loading center />;
-  }
+  if (isLoading) return <Loading center />;
 
   return (
     <>
-      <StatsContainer />
+      <StatsContainer isTeacher={isTeacher} />
     </>
   );
 };
