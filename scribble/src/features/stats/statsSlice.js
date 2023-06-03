@@ -10,10 +10,18 @@ const initialState = {
   gradedTasks: null,
   ongoingTasks: null,
   completedTasks: null,
+  prevResults: [
+    { date: "Jul 2021", count: 1 },
+    { date: "Aug 2021", count: 4 },
+    { date: "Sep 2021", count: 3 },
+    { date: "Oct 2021", count: 2 },
+    { date: "Nov 2021", count: 2 },
+    { date: "Dec 2021", count: 5 },
+  ],
 };
 
 export const getStats = createAsyncThunk(
-  "tassk/getStats",
+  "tasks/getStats",
   async (_, thunkAPI) => {
     try {
       const token = getObjectFromLocalStorage("token");
