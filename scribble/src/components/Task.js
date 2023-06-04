@@ -20,6 +20,7 @@ const Task = ({
   endDate,
   endTime,
   task,
+  submission = null,
   answerKey = null,
   status,
   score,
@@ -96,6 +97,11 @@ const Task = ({
     );
   };
 
+  const handleView = () => {
+    console.log("handleView triggered, ", id);
+    window.open(submission, "_blank");
+  };
+
   return (
     <Wrapper>
       <header>
@@ -161,36 +167,34 @@ const Task = ({
               </Link>
             )}
 
-            {!isTeacher && status === "submitted" && (
-              <button
-                type="button"
-                className="btn edit-btn"
-                onClick={() => console.log("View submission")}
-              >
-                View
-              </button>
-            )}
+            {!isTeacher &&
+              (status === "submitted" ||
+                status === "graded" ||
+                status === "requested" ||
+                status === "reviewed") && (
+                <button
+                  type="button"
+                  className="btn edit-btn"
+                  onClick={handleView}
+                >
+                  View
+                </button>
+              )}
 
-            {!isTeacher && (status === "graded" || status === "requested") && (
-              <button
-                type="button"
-                className="btn edit-btn"
-                onClick={() =>
-                  openModal({ id: id, result: score, maxMarks: maxMarks })
-                }
-              >
-                Result
-              </button>
-            )}
-
-            {/* {true && (
-              <ModalWindow
-                value={10}
-                maxValue={maxMarks}
-                isModalOpen={true}
-                closeModal={closeModal}
-              />
-            )} */}
+            {!isTeacher &&
+              (status === "graded" ||
+                status === "requested" ||
+                status === "reviewed") && (
+                <button
+                  type="button"
+                  className="btn edit-btn"
+                  onClick={() =>
+                    openModal({ id: id, result: score, maxMarks: maxMarks })
+                  }
+                >
+                  Result
+                </button>
+              )}
 
             {!isTeacher && status === "submitted" && (
               <button
