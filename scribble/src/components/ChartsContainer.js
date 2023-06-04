@@ -9,7 +9,7 @@ const ChartsContainer = () => {
   const { prevResults } = useSelector((store) => store.stats);
   return (
     <Wrapper>
-      <h4>Previous Results</h4>
+      <h4>Analysis</h4>
       <button type="button" onClick={() => setBarChart(!barChart)}>
         {barChart ? "Area Chart" : "Bar Chart"}
       </button>

@@ -82,6 +82,12 @@ const viewTasksSlice = createSlice({
     changePage: (state, { payload }) => {
       state.page = payload;
     },
+    openModal: (state) => {
+      state.isModalOpen = true;
+    },
+    closeModal: (state) => {
+      state.isModalOpen = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -93,6 +99,8 @@ const viewTasksSlice = createSlice({
         state.totalTasks = payload.count;
         state.numOfPages = payload.num_pages;
         state.tasks = payload.results.map((item) => {
+          let score = Number(item.score);
+          score = Number.isInteger(score) ? parseInt(item.score) : score;
           return {
             id: item.id,
             taskName: item.name,
@@ -104,6 +112,7 @@ const viewTasksSlice = createSlice({
             task: item.task_pdf_link,
             answerKey: item.answer_key_link,
             status: item.status,
+            score: score,
           };
         });
       })
@@ -147,5 +156,7 @@ export const {
   handleChange,
   clearFilters,
   changePage,
+  openModal,
+  closeModal,
 } = viewTasksSlice.actions;
 export default viewTasksSlice.reducer;

@@ -1,7 +1,14 @@
 import React from "react";
+import ProgressWheel from "../../components/ProgressWheel";
+import ModalWindow from "../../components/ModalWindow";
 
 const Results = () => {
-  return <h1>Results</h1>;
+  return (
+    <>
+      {/* <ProgressWheel /> */}
+      <ModalWindow />
+    </>
+  );
 };
 
 export default Results;

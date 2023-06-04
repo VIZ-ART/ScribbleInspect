@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBookOpen, FaCalendarCheck } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteTask, gradeTask } from "../features/task/taskSlice";
 import { setEditingMode } from "../features/task/taskSlice";
 import { setSubmissionMode } from "../features/submission/submissionSlice";
+import { openModal, closeModal } from "../features/viewTasks/viewTasksSlice";
+import ModalWindow from "./ModalWindow";
 
 const Task = ({
   id,
@@ -20,6 +22,8 @@ const Task = ({
   task,
   answerKey = null,
   status,
+  score,
+  openModal,
 }) => {
   const dispatch = useDispatch();
   const { isTeacher } = useSelector((store) => store.user);
@@ -166,6 +170,27 @@ const Task = ({
                 View
               </button>
             )}
+
+            {!isTeacher && (status === "graded" || status === "requested") && (
+              <button
+                type="button"
+                className="btn edit-btn"
+                onClick={() =>
+                  openModal({ id: id, result: score, maxMarks: maxMarks })
+                }
+              >
+                Result
+              </button>
+            )}
+
+            {/* {true && (
+              <ModalWindow
+                value={10}
+                maxValue={maxMarks}
+                isModalOpen={true}
+                closeModal={closeModal}
+              />
+            )} */}
 
             {!isTeacher && status === "submitted" && (
               <button
