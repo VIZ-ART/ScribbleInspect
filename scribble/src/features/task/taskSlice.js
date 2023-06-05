@@ -88,7 +88,7 @@ export const createTask = createAsyncThunk(
           end_date: task.endDate,
           end_time: task.endTime,
           task_pdf_link: task.task,
-          answer_key_link: task.answerKey,
+          answer_link: task.answerKey,
         },
         {
           headers: { Authorization: `Bearer ${token.access}` },
@@ -147,7 +147,7 @@ export const editTask = createAsyncThunk(
           end_date: task.endDate,
           end_time: task.endTime,
           task_pdf_link: task.task,
-          answer_key_link: task.answerKey,
+          answer_link: task.answerKey,
         },
         {
           headers: { Authorization: `Bearer ${token.access}` },

@@ -137,7 +137,7 @@ const viewTasksSlice = createSlice({
             endDate: item.end_date,
             endTime: item.end_time,
             task: item.task_pdf_link,
-            answerKey: item.answer_key_link,
+            answerKey: item.answer_link,
             status: item.status,
           };
         });
