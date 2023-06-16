@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaBookOpen, FaCalendarCheck } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Task";
 import TaskInfo from "./TaskInfo";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTask, gradeTask } from "../features/task/taskSlice";
+import { gradeTask } from "../features/task/taskSlice";
 import { setEditingMode } from "../features/task/taskSlice";
 import { setSubmissionMode } from "../features/submission/submissionSlice";
-import { openModal, closeModal } from "../features/viewTasks/viewTasksSlice";
-import ModalWindow from "./ModalWindow";
 
 const Task = ({
   id,
@@ -25,6 +23,7 @@ const Task = ({
   status,
   score,
   openModal,
+  openDialog,
 }) => {
   const dispatch = useDispatch();
   const { isTeacher } = useSelector((store) => store.user);
@@ -48,11 +47,6 @@ const Task = ({
       hour12: true,
     });
     return `${formattedDate} ${formattedTime}`;
-  };
-
-  const handleDelete = () => {
-    const result = window.confirm("Are you sure you want to delete this task?");
-    result && dispatch(deleteTask(id));
   };
 
   const openFile = (fileLink) => {
@@ -200,7 +194,9 @@ const Task = ({
               <button
                 type="button"
                 className="btn delete-btn"
-                onClick={() => console.log("Delete submission")}
+                onClick={() =>
+                  openDialog(id, "submission", "Delete submission?")
+                }
               >
                 Delete
               </button>
@@ -220,7 +216,7 @@ const Task = ({
               <button
                 type="button"
                 className="btn delete-btn"
-                onClick={handleDelete}
+                onClick={() => openDialog(id, "task", "Delete Task?")}
               >
                 Delete
               </button>

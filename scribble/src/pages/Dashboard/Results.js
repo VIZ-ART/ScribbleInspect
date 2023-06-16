@@ -1,12 +1,27 @@
-import React from "react";
-import ProgressWheel from "../../components/ProgressWheel";
-import ModalWindow from "../../components/ModalWindow";
+import React, { useState } from "react";
+import { DialogWindow } from "../../components";
 
 const Results = () => {
+  const [isDialogOpen, setDialogOpen] = useState(true);
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+  };
+
   return (
     <>
-      {/* <ProgressWheel /> */}
-      <ModalWindow />
+      <button
+        onClick={() => {
+          setDialogOpen(true);
+        }}
+      >
+        Open
+      </button>
+      <DialogWindow
+        isModalOpen={isDialogOpen}
+        closeModal={closeDialog}
+        modalText={"Delete Task?"}
+      />
     </>
   );
 };

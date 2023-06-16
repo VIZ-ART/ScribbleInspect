@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Confetti from "react-confetti";
-import { useDispatch, useSelector } from "react-redux";
 import ProgressWheel from "./ProgressWheel";
 Modal.setAppElement("#root");
 
 const ModalWindow = ({ isModalOpen, closeModal, value, maxValue }) => {
-  const dispatch = useDispatch();
   const [showConfetti, setShowConfetti] = useState(false);
 
   const modalStyles = {
@@ -37,7 +35,6 @@ const ModalWindow = ({ isModalOpen, closeModal, value, maxValue }) => {
     title: {
       alignSelf: "center",
     },
-    wheel: {},
     btn: {
       alignSelf: "center",
       width: "fit-content",
