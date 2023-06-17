@@ -12,6 +12,7 @@ import PageBtnContainer from "./PageBtnContainer";
 import ModalWindow from "./ModalWindow";
 import DialogWindow from "./DialogWindow";
 import { deleteTask } from "../features/task/taskSlice";
+import { deleteSubmission } from "../features/submission/submissionSlice";
 
 const initialState = {
   selectedTask: null,
@@ -40,7 +41,6 @@ const TasksContainer = () => {
   };
 
   const handleOpenDialog = (id, type, text) => {
-    console.log("dialog opened");
     setValues({
       ...values,
       selectedTask: { id: id },
@@ -51,7 +51,6 @@ const TasksContainer = () => {
   };
 
   const handleCloseDialog = () => {
-    console.log("dialog closed");
     setValues({
       ...values,
       selectedTaskId: null,
@@ -62,9 +61,9 @@ const TasksContainer = () => {
   };
 
   const handleSuccessDialog = () => {
-    console.log("inside handlesuccessdialog taskcontainer.js");
     if (values.type === "task") dispatch(deleteTask(values.selectedTask.id));
-    else if (values.type === "submission") console.log("submission deleted"); //TODO
+    else if (values.type === "submission")
+      dispatch(deleteSubmission(values.selectedTask.id)); //BUG
     handleCloseDialog();
   };
 

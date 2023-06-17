@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { customFetch } from "../../utils/axios";
 import { getObjectFromLocalStorage } from "../../utils/localStorage";
 import { logoutUser } from "../user/userSlice";
+import { getAllTasks } from "../viewTasks/viewTasksSlice";
 
 const initialState = {
   isLoading: false,
@@ -55,7 +56,6 @@ export const submitTask = createAsyncThunk(
       const token = getObjectFromLocalStorage("token").access;
       const userId = getObjectFromLocalStorage("user").id;
       const { taskId } = thunkAPI.getState().submission;
-      console.log(submission);
       const resp = await customFetch.patch(
         "/tasks/submit/",
         {
@@ -68,9 +68,35 @@ export const submitTask = createAsyncThunk(
         }
       );
 
+      thunkAPI.dispatch(getAllTasks());
       return resp;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const deleteSubmission = createAsyncThunk(
+  "submission/deleteSubmission",
+  async (taskId, thunkAPI) => {
+    try {
+      const token = getObjectFromLocalStorage("token").access;
+      const userId = getObjectFromLocalStorage("user").id;
+      const resp = await customFetch.patch(
+        "/tasks/delete-sub/",
+        {
+          task_id: taskId,
+          stud_id: userId,
+        },
+        {
+          Authorization: `Bearer ${token.access}`,
+        }
+      );
+
+      thunkAPI.dispatch(getAllTasks());
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.data);
     }
   }
 );
@@ -112,8 +138,18 @@ const submissionSlice = createSlice({
       })
       .addCase(submitTask.rejected, (state, { payload }) => {
         state.isLoading = false;
-        console.log(payload);
         payload && toast.error(payload);
+      })
+      .addCase(deleteSubmission.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteSubmission.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        if (payload.status === 200) toast.success("Deleted submission");
+      })
+      .addCase(deleteSubmission.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        payload && toast.error(payload || "something went wrong");
       });
   },
 });

@@ -37,7 +37,6 @@ export const getAllTasks = createAsyncThunk(
       });
       return resp.data;
     } catch (error) {
-      console.log("someting went wraang");
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
@@ -144,7 +143,6 @@ const viewTasksSlice = createSlice({
       })
       .addCase(getTeacherTasks.rejected, (state, { payload }) => {
         state.isLoading = false;
-        console.log(payload);
         toast.error(payload || "Get task went wrong :)");
       });
   },

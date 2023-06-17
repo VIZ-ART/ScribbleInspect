@@ -63,7 +63,6 @@ const ModalWindow = ({ isModalOpen, closeModal, value, maxValue }) => {
     else return "💪 Keep trying, maybe you'll get there!";
   };
 
-  console.log("modal rendered");
   return (
     <Modal
       isOpen={isModalOpen}

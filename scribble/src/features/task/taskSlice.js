@@ -122,7 +122,6 @@ export const deleteTask = createAsyncThunk(
       });
 
       thunkAPI.dispatch(getTeacherTasks());
-      console.log(resp);
       return resp.data;
     } catch (error) {
       thunkAPI.dispatch(hideLoading());
@@ -166,7 +165,6 @@ export const gradeTask = createAsyncThunk(
   async (task, thunkAPI) => {
     try {
       const token = getObjectFromLocalStorage("token");
-      console.log();
       const resp = await customFetch.post(
         "/tasks/grade/",
         {
@@ -191,7 +189,6 @@ const taskSlice = createSlice({
       state.isEditing = true;
       state.editTaskId = payload.id;
       state.task = payload;
-      console.log(state);
     },
   },
 

@@ -37,7 +37,6 @@ const AddTask = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values);
     if (
       !values.taskName ||
       !values.subjectName ||
@@ -66,7 +65,6 @@ const AddTask = () => {
   const handleTaskInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(`${name}:${value}`);
     setValues({ ...values, [name]: value });
   };
 
@@ -77,7 +75,6 @@ const AddTask = () => {
       uploadFile({
         file,
         callback: (fileLink) => {
-          console.log("file link in add task ", fileLink);
           setValues({ ...values, [name]: fileLink });
         },
       })

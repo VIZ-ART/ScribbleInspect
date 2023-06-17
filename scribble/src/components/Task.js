@@ -54,7 +54,6 @@ const Task = ({
   };
 
   const handleEdit = () => {
-    console.log("handleEdit triggered, ", id);
     dispatch(
       setEditingMode({
         id,
@@ -71,7 +70,6 @@ const Task = ({
   };
 
   const handleUpload = () => {
-    console.log("handleUpload triggered,  ", id);
     dispatch(
       setSubmissionMode({
         id,
@@ -83,7 +81,6 @@ const Task = ({
   };
 
   const handleGrade = () => {
-    console.log("handleGrade triggered, ", id);
     dispatch(
       gradeTask({
         id,
@@ -92,7 +89,6 @@ const Task = ({
   };
 
   const handleView = () => {
-    console.log("handleView triggered, ", id);
     window.open(submission, "_blank");
   };
 

@@ -61,8 +61,7 @@ const statsSlice = createSlice({
       })
       .addCase(getStats.rejected, (state, { payload }) => {
         state.isLoading = false;
-        console.log("Get stats went wrong");
-        payload && toast.error(payload);
+        payload && toast.error(payload || "Unable to retrieve stats");
       });
   },
 });

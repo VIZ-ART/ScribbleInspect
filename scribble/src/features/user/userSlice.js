@@ -93,7 +93,6 @@ const userSlice = createSlice({
           userType: data.user_type,
           id: data.id,
         };
-        console.log(payload);
         state.isLoading = false;
         state.user = user;
         addObjectToLocalStorage("user", user);
@@ -118,7 +117,6 @@ const userSlice = createSlice({
           userType: data.user_type,
           id: data.id,
         };
-        console.log(user);
         state.user = user;
         state.isTeacher = user.userType === "Teacher" ? true : false;
         addObjectToLocalStorage("token", token);
