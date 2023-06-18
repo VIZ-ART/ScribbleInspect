@@ -1,5 +1,6 @@
 import React from "react";
 import { FaBookOpen, FaCalendarCheck } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Task";
@@ -22,8 +23,10 @@ const Task = ({
   answerKey = null,
   status,
   score,
+  submissionCount,
   openModal,
   openDialog,
+  openSubmission,
 }) => {
   const dispatch = useDispatch();
   const { isTeacher } = useSelector((store) => store.user);
@@ -98,8 +101,23 @@ const Task = ({
         <div className="main-icon">{iconLetters.substring(0, 4)}</div>
         <div className="info">
           <h5>{taskName}</h5>
-          {isTeacher || <p>{teacherName}</p>}
+          {isTeacher ? (
+            <p>{submissionCount + " responses"}</p>
+          ) : (
+            <p>{teacherName}</p>
+          )}
         </div>
+
+        {isTeacher && (
+          <button
+            className="btn subs-btn"
+            onClick={() => {
+              openSubmission(id);
+            }}
+          >
+            <FaUsers style={{ fontSize: "24px" }} />
+          </button>
+        )}
       </header>
       <div className="content">
         <div className="content-center">
@@ -117,106 +135,109 @@ const Task = ({
 
         <footer>
           <div className="actions">
-            <button
-              name="task"
-              type="button"
-              className="btn edit-btn"
-              onClick={() => openFile(task)}
-            >
-              Task
-            </button>
-
-            {isTeacher && (
+            <div className="actions-left">
               <button
-                name="key"
+                name="task"
                 type="button"
                 className="btn edit-btn"
-                onClick={() => openFile(answerKey)}
+                onClick={() => openFile(task)}
               >
-                Key
+                Task
               </button>
-            )}
 
-            {!isTeacher && status === "pending" && (
-              <Link
-                to="/submit-task"
-                className="btn edit-btn"
-                onClick={handleUpload}
-              >
-                Upload
-              </Link>
-            )}
-
-            {isTeacher && (
-              <Link
-                to="/add-task"
-                className="btn edit-btn"
-                onClick={handleEdit}
-              >
-                Edit
-              </Link>
-            )}
-
-            {!isTeacher &&
-              (status === "submitted" ||
-                status === "graded" ||
-                status === "requested" ||
-                status === "reviewed") && (
+              {isTeacher && (
                 <button
+                  name="key"
                   type="button"
                   className="btn edit-btn"
-                  onClick={handleView}
+                  onClick={() => openFile(answerKey)}
                 >
-                  View
+                  Key
                 </button>
               )}
 
-            {!isTeacher &&
-              (status === "graded" ||
-                status === "requested" ||
-                status === "reviewed") && (
+              {!isTeacher && status === "pending" && (
+                <Link
+                  to="/submit-task"
+                  className="btn edit-btn"
+                  onClick={handleUpload}
+                >
+                  Upload
+                </Link>
+              )}
+
+              {isTeacher && (
+                <Link
+                  to="/add-task"
+                  className="btn edit-btn"
+                  onClick={handleEdit}
+                >
+                  Edit
+                </Link>
+              )}
+
+              {!isTeacher &&
+                (status === "submitted" ||
+                  status === "graded" ||
+                  status === "requested" ||
+                  status === "reviewed") && (
+                  <button
+                    type="button"
+                    className="btn edit-btn"
+                    onClick={handleView}
+                  >
+                    View
+                  </button>
+                )}
+            </div>
+            <div className="actions-right">
+              {!isTeacher &&
+                (status === "graded" ||
+                  status === "requested" ||
+                  status === "reviewed") && (
+                  <button
+                    type="button"
+                    className="btn result-btn"
+                    onClick={() =>
+                      openModal({ id: id, result: score, maxMarks: maxMarks })
+                    }
+                  >
+                    Result
+                  </button>
+                )}
+
+              {!isTeacher && status === "submitted" && (
                 <button
                   type="button"
-                  className="btn edit-btn"
+                  className="btn delete-btn"
                   onClick={() =>
-                    openModal({ id: id, result: score, maxMarks: maxMarks })
+                    openDialog(id, "submission", "Delete submission?")
                   }
                 >
-                  Result
+                  Delete
                 </button>
               )}
 
-            {!isTeacher && status === "submitted" && (
-              <button
-                type="button"
-                className="btn delete-btn"
-                onClick={() =>
-                  openDialog(id, "submission", "Delete submission?")
-                }
-              >
-                Delete
-              </button>
-            )}
+              {isTeacher && status === "completed" && (
+                <button
+                  type="button"
+                  className="btn grade-btn"
+                  onClick={handleGrade}
+                >
+                  Grade
+                </button>
+              )}
 
-            {isTeacher && status === "completed" && (
-              <button
-                type="button"
-                className="btn grade-btn"
-                onClick={handleGrade}
-              >
-                Grade
-              </button>
-            )}
-
-            {isTeacher && (
-              <button
-                type="button"
-                className="btn delete-btn"
-                onClick={() => openDialog(id, "task", "Delete Task?")}
-              >
-                Delete
-              </button>
-            )}
+              {isTeacher && (
+                <button
+                  type="button"
+                  className="btn delete-btn"
+                  onClick={() => openDialog(id, "task", "Delete Task?")}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
           </div>
         </footer>
       </div>

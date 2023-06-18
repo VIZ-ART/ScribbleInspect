@@ -11,7 +11,7 @@ const Wrapper = styled.article`
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--grey-100);
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 5fr 1fr;
     align-items: center;
     h5 {
       letter-spacing: 0;
@@ -41,6 +41,17 @@ const Wrapper = styled.article`
       letter-spacing: var(--letterSpacing);
     }
   }
+  .subs-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    align-self: center;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .pending,
   .ongoing {
     background: #fcefc7;
@@ -94,9 +105,24 @@ const Wrapper = styled.article`
     height: 30px;
     margin-top: 0.5rem;
   }
+
   footer {
     margin-top: 1rem;
+    border-top: 1px solid var(--grey-100);
+    padding-top: 1rem;
   }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .actions-left,
+  .actions-right {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .edit-btn,
   .delete-btn {
     letter-spacing: var(--letterSpacing);
@@ -108,6 +134,13 @@ const Wrapper = styled.article`
     background: var(--green-light);
     margin-right: 0.5rem;
   }
+  .grade-btn,
+  .result-btn {
+    margin-right: 0.5rem;
+    color: var(--blue-dark);
+    background: var(--blue-light);
+  }
+
   .delete-btn {
     color: var(--red-dark);
     background: var(--red-light);

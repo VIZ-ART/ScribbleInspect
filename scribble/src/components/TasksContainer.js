@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import {
   getAllTasks,
+  getSubmissions,
   getTeacherTasks,
 } from "../features/viewTasks/viewTasksSlice";
 import PageBtnContainer from "./PageBtnContainer";
@@ -13,17 +14,20 @@ import ModalWindow from "./ModalWindow";
 import DialogWindow from "./DialogWindow";
 import { deleteTask } from "../features/task/taskSlice";
 import { deleteSubmission } from "../features/submission/submissionSlice";
+import SubmissionsWindow from "./SubmissionsWindow";
 
 const initialState = {
   selectedTask: null,
   isModalOpen: false,
+  isSubmissionOpen: false,
   isDialogOpen: false,
   dialogText: "",
+  submissions: [],
   type: null,
 };
 
 const TasksContainer = () => {
-  const { tasks, isLoading, totalTasks, numOfPages } = useSelector(
+  const { tasks, isLoading, totalTasks, numOfPages, submissions } = useSelector(
     (store) => store.viewTasks
   );
 
@@ -53,7 +57,7 @@ const TasksContainer = () => {
   const handleCloseDialog = () => {
     setValues({
       ...values,
-      selectedTaskId: null,
+      selectedTask: null,
       type: null,
       dialogText: "",
       isDialogOpen: false,
@@ -63,13 +67,38 @@ const TasksContainer = () => {
   const handleSuccessDialog = () => {
     if (values.type === "task") dispatch(deleteTask(values.selectedTask.id));
     else if (values.type === "submission")
-      dispatch(deleteSubmission(values.selectedTask.id)); //BUG
+      dispatch(deleteSubmission(values.selectedTask.id));
     handleCloseDialog();
+  };
+
+  const handleOpenSubmission = (id) => {
+    dispatch(getSubmissions(id));
+    setValues({
+      ...values,
+      selectedTask: { id: id },
+      isSubmissionOpen: true,
+    });
+  };
+
+  const handleCloseSubmission = () => {
+    setValues({
+      ...values,
+      selectedTask: null,
+      submissions: null,
+      isSubmissionOpen: false,
+    });
   };
 
   useEffect(() => {
     isTeacher ? dispatch(getTeacherTasks()) : dispatch(getAllTasks());
   }, [isTeacher, dispatch]);
+
+  useEffect(() => {
+    setValues({
+      ...values,
+      submissions,
+    });
+  }, [submissions, dispatch]);
 
   if (isLoading) return <Loading center />;
 
@@ -93,6 +122,7 @@ const TasksContainer = () => {
               {...task}
               openModal={handleOpenModal}
               openDialog={handleOpenDialog}
+              openSubmission={handleOpenSubmission}
             />
           );
         })}
@@ -110,6 +140,14 @@ const TasksContainer = () => {
             closeModal={handleCloseDialog}
             successModal={handleSuccessDialog}
             modalText={values.dialogText}
+          />
+        )}
+        {values.isSubmissionOpen && (
+          <SubmissionsWindow
+            isModalOpen={values.isSubmissionOpen}
+            closeModal={handleCloseSubmission}
+            submissions={submissions}
+            modalText={"Submissions"}
           />
         )}
       </div>

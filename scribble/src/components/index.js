@@ -10,6 +10,9 @@ import Task from "./Task";
 import StatsContainer from "./StatsContainer";
 import Loading from "./Loading";
 import DialogWindow from "./DialogWindow";
+import ModalWindow from "./ModalWindow";
+import SubmissionsWindow from "./SubmissionsWindow";
+import SubmissionItem from "./SubmissionItem";
 
 export {
   Logo,
@@ -23,5 +26,8 @@ export {
   Task,
   StatsContainer,
   Loading,
+  ModalWindow,
   DialogWindow,
+  SubmissionsWindow,
+  SubmissionItem,
 };

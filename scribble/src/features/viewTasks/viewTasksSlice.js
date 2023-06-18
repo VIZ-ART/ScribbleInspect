@@ -18,6 +18,7 @@ const initialState = {
   numOfPages: 1,
   page: 1,
   stats: {},
+  submissions: {},
   ...initialFiltersState,
 };
 
@@ -58,6 +59,23 @@ export const getTeacherTasks = createAsyncThunk(
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getSubmissions = createAsyncThunk(
+  "tasks/getSubmissions",
+  async (taskId, thunkAPI) => {
+    try {
+      console.log(taskId + " in slice fn");
+      const token = getObjectFromLocalStorage("token");
+      const resp = await customFetch.get("/tasks/getsub/" + taskId, {
+        headers: { Authorization: `Bearer ${token.access}` },
+      });
+      console.log(resp);
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -138,12 +156,31 @@ const viewTasksSlice = createSlice({
             task: item.task_pdf_link,
             answerKey: item.answer_link,
             status: item.status,
+            submissionCount: item.submission_count,
           };
         });
       })
       .addCase(getTeacherTasks.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(payload || "Get task went wrong :)");
+      })
+      .addCase(getSubmissions.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getSubmissions.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.submissions = payload.map((item) => {
+          return {
+            studentName: item.student_name,
+            submissionLink: item.submission_link,
+            score: item.score,
+            status: item.status,
+          };
+        });
+      })
+      .addCase(getSubmissions.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload || "Get submissions went wrong :)");
       });
   },
 });

@@ -247,6 +247,7 @@ const taskSlice = createSlice({
       })
       .addCase(gradeTask.pending, (state) => {
         state.isLoading = true;
+        toast.success("Grading initiated");
       })
       .addCase(gradeTask.fulfilled, (state, { payload }) => {
         state.isLoading = false;

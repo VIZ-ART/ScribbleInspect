@@ -68,7 +68,6 @@ export const submitTask = createAsyncThunk(
         }
       );
 
-      thunkAPI.dispatch(getAllTasks());
       return resp;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);

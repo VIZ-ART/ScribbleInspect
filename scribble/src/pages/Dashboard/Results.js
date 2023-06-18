@@ -1,29 +1,7 @@
-import React, { useState } from "react";
-import { DialogWindow } from "../../components";
+import React from "react";
 
 const Results = () => {
-  const [isDialogOpen, setDialogOpen] = useState(true);
-
-  const closeDialog = () => {
-    setDialogOpen(false);
-  };
-
-  return (
-    <>
-      <button
-        onClick={() => {
-          setDialogOpen(true);
-        }}
-      >
-        Open
-      </button>
-      <DialogWindow
-        isModalOpen={isDialogOpen}
-        closeModal={closeDialog}
-        modalText={"Delete Task?"}
-      />
-    </>
-  );
+  <h1>Results</h1>;
 };
 
 export default Results;

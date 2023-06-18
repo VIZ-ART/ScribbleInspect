@@ -40,9 +40,10 @@ html {
   --white: #fff;
   --red-light: #f8d7da;
   --red-dark: #842029;
-  --red-bright: #c10202;
   --green-light: #d1e7dd;
   --green-dark: #0f5132;
+  --blue-light: #dbeaf2;
+  --blue-dark: #1f4c6f;
 
   /* fonts  */
   --headingFont: "Roboto Condensed", Sans-Serif;
