@@ -112,7 +112,7 @@ const Task = ({
           <button
             className="btn subs-btn"
             onClick={() => {
-              openSubmission(id);
+              openSubmission(id, maxMarks);
             }}
           >
             <FaUsers style={{ fontSize: "24px" }} />

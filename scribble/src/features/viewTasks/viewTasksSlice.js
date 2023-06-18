@@ -67,12 +67,10 @@ export const getSubmissions = createAsyncThunk(
   "tasks/getSubmissions",
   async (taskId, thunkAPI) => {
     try {
-      console.log(taskId + " in slice fn");
       const token = getObjectFromLocalStorage("token");
       const resp = await customFetch.get("/tasks/getsub/" + taskId, {
         headers: { Authorization: `Bearer ${token.access}` },
       });
-      console.log(resp);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

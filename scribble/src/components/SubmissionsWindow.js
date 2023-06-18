@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 import SubmissionItem from "./SubmissionItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
+import ChangeScoreWindow from "./ChangeScoreWindow";
+
+const initialState = {
+  selectedTask: null,
+  selectedStudent: null,
+  isModifyOpen: false,
+  score: null,
+  maxScore: null,
+};
 
 const SubmissionsWindow = ({
   isModalOpen,
   closeModal,
   submissions,
   modalText,
+  selectedTask,
 }) => {
   const modalStyles = {
     overlay: {
@@ -71,7 +81,34 @@ const SubmissionsWindow = ({
     },
   };
 
+  const dispatch = useDispatch();
   const { isLoading } = useSelector((store) => store.viewTasks);
+  const [values, setValues] = useState(initialState);
+
+  const handleOpenScore = (student, prevScore) => {
+    setValues({
+      ...values,
+      selectedTask: selectedTask,
+      selectedStudent: student,
+      isModifyOpen: true,
+      score: prevScore,
+    });
+  };
+
+  const handleCloseScore = () => {
+    setValues({
+      ...values,
+      selectedTask: null,
+      selectedStudent: null,
+      isModifyOpen: false,
+      score: null,
+    });
+  };
+
+  const handleModifyScore = () => {
+    // dispatch(updateScore(selectedTask.id, selectedStudent.id, score))
+    handleCloseScore();
+  };
 
   if (isLoading) return <Loading center />;
   return (
@@ -98,10 +135,20 @@ const SubmissionsWindow = ({
               key={index}
               submissionContent={item}
               odd={index % 2 !== 0}
+              openModal={handleOpenScore}
             />
           );
         })}
       </div>
+      {values.isModifyOpen && (
+        <ChangeScoreWindow
+          isModalOpen={values.isModifyOpen}
+          closeModal={handleCloseScore}
+          successModal={handleModifyScore}
+          prevScore={values.score}
+          maxScore={values.selectedTask.maxScore}
+        />
+      )}
     </Modal>
   );
 };

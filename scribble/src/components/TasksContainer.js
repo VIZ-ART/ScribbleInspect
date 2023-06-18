@@ -71,11 +71,11 @@ const TasksContainer = () => {
     handleCloseDialog();
   };
 
-  const handleOpenSubmission = (id) => {
+  const handleOpenSubmission = (id, maxScore) => {
     dispatch(getSubmissions(id));
     setValues({
       ...values,
-      selectedTask: { id: id },
+      selectedTask: { id: id, maxScore: maxScore },
       isSubmissionOpen: true,
     });
   };
@@ -148,6 +148,7 @@ const TasksContainer = () => {
             closeModal={handleCloseSubmission}
             submissions={submissions}
             modalText={"Submissions"}
+            selectedTask={values.selectedTask}
           />
         )}
       </div>
