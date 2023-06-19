@@ -216,7 +216,6 @@ export const updateScore = createAsyncThunk(
         student_id: studentId,
         score: score,
       };
-      console.log(data);
       const axiosConfig = {
         headers: { Authorization: `Bearer ${token.access}` },
       };

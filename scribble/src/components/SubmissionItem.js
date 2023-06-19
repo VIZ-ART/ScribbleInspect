@@ -8,7 +8,6 @@ const SubmissionItem = ({ title, odd, submissionContent, openModal }) => {
   const handleLinkOpen = (link) => {
     window.open(link, "_blank");
   };
-  console.log(studentName, status);
   return (
     <Wrapper>
       <div
