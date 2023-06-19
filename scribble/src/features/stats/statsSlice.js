@@ -7,7 +7,7 @@ const initialState = {
   isLoading: false,
   pendingTasks: null,
   submittedTasks: null,
-  gradedTasks: null,
+  requestedTasks: null,
   ongoingTasks: null,
   completedTasks: null,
   prevResults: [
@@ -48,14 +48,14 @@ const statsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getStats.pending, (state, { payload }) => {
+      .addCase(getStats.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getStats.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.pendingTasks = payload.pending_count || null;
         state.submittedTasks = payload.submitted_count || null;
-        state.gradedTasks = payload.graded_count || null;
+        state.requestedTasks = payload.requested_count || null;
         state.completedTasks = payload.completed_count || null;
         state.ongoingTasks = payload.ongoing_count || null;
       })

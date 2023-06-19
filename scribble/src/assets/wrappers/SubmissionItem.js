@@ -80,8 +80,9 @@ const Wrapper = styled.section`
   .graded {
     color: #647acb;
   }
-  .requested {
-    color: #666;
+  .requested,
+  .grading {
+    color: #ff8c00;
   }
   .reviewed {
     color: #722ed1;

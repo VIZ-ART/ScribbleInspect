@@ -71,9 +71,10 @@ const Wrapper = styled.article`
     background: #e0e8f9;
     color: #647acb;
   }
-  .requested {
-    background: #f5f5f5;
-    color: #666;
+  .requested,
+  .grading {
+    background: #fde9d2;
+    color: #ff8c00;
   }
   .reviewed {
     background: #f9e6ff;
