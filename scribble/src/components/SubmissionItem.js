@@ -2,13 +2,8 @@ import React from "react";
 import Wrapper from "../assets/wrappers/SubmissionItem";
 
 const SubmissionItem = ({ title, odd, submissionContent, openModal }) => {
-  const {
-    studentName,
-    score,
-    status,
-    submissionLink,
-    studentId = "123",
-  } = submissionContent;
+  const { studentName, score, status, submissionLink, studentId } =
+    submissionContent;
 
   const handleLinkOpen = (link) => {
     window.open(link, "_blank");

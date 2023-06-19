@@ -173,6 +173,7 @@ const viewTasksSlice = createSlice({
             submissionLink: item.submission_link,
             score: item.score,
             status: item.status,
+            studentId: item.student_id,
           };
         });
       })

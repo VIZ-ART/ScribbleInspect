@@ -7,6 +7,7 @@ import {
   showLoading,
   hideLoading,
   getTeacherTasks,
+  getSubmissions,
 } from "../viewTasks/viewTasksSlice";
 
 const initialState = {
@@ -180,6 +181,34 @@ export const gradeTask = createAsyncThunk(
   }
 );
 
+export const updateScore = createAsyncThunk(
+  "task/updateScore",
+  async (submission, thunkAPI) => {
+    try {
+      const { taskId, studentId, score } = submission;
+      const token = getObjectFromLocalStorage("token");
+      const data = {
+        task_id: taskId,
+        student_id: studentId,
+        score: score,
+      };
+      console.log(data);
+      const axiosConfig = {
+        headers: { Authorization: `Bearer ${token.access}` },
+      };
+      const resp = await customFetch.post(
+        "/tasks/update-sc/",
+        data,
+        axiosConfig
+      );
+      thunkAPI.dispatch(getSubmissions(taskId));
+      return resp;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 const taskSlice = createSlice({
   name: "task",
   initialState,
@@ -256,6 +285,17 @@ const taskSlice = createSlice({
       .addCase(gradeTask.rejected, (state, { payload }) => {
         state.isLoading = false;
         payload && toast.error(payload);
+      })
+      .addCase(updateScore.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateScore.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        if (payload.status === 200) toast.success("Score is updated");
+      })
+      .addCase(updateScore.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload || "Something went wrong");
       });
   },
 });

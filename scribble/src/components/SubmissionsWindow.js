@@ -5,6 +5,7 @@ import SubmissionItem from "./SubmissionItem";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
 import ChangeScoreWindow from "./ChangeScoreWindow";
+import { updateScore } from "../features/task/taskSlice";
 
 const initialState = {
   selectedTask: null,
@@ -89,7 +90,7 @@ const SubmissionsWindow = ({
     setValues({
       ...values,
       selectedTask: selectedTask,
-      selectedStudent: student,
+      selectedStudent: { id: student },
       isModifyOpen: true,
       score: prevScore,
     });
@@ -105,8 +106,14 @@ const SubmissionsWindow = ({
     });
   };
 
-  const handleModifyScore = () => {
-    // dispatch(updateScore(selectedTask.id, selectedStudent.id, score))
+  const handleModifyScore = (newScore) => {
+    dispatch(
+      updateScore({
+        taskId: values.selectedTask.id,
+        studentId: values.selectedStudent.id,
+        score: newScore,
+      })
+    );
     handleCloseScore();
   };
 

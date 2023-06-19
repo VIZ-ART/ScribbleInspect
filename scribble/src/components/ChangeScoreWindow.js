@@ -80,9 +80,10 @@ const ChangeScoreWindow = ({
   };
 
   const handleConfirm = () => {
+    console.log(score, "just before confirmation");
     if (score > maxScore)
       toast.warning("New score shall not exceed " + maxScore + "!");
-    else successModal();
+    else successModal(score);
   };
 
   return (
