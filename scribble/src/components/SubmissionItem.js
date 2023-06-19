@@ -8,7 +8,7 @@ const SubmissionItem = ({ title, odd, submissionContent, openModal }) => {
   const handleLinkOpen = (link) => {
     window.open(link, "_blank");
   };
-
+  console.log(studentName, status);
   return (
     <Wrapper>
       <div
@@ -17,7 +17,7 @@ const SubmissionItem = ({ title, odd, submissionContent, openModal }) => {
         }
       >
         <div>{studentName}</div>
-        <div>{status}</div>
+        <div className={status}>{status}</div>
         <div>{score || "-"}</div>
         <button
           className="view-btn"

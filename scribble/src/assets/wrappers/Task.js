@@ -50,6 +50,7 @@ const Wrapper = styled.article`
     display: flex;
     justify-content: center;
     align-items: center;
+    justify-self: end;
   }
 
   .pending,
@@ -145,6 +146,12 @@ const Wrapper = styled.article`
     color: var(--red-dark);
     background: var(--red-light);
   }
+
+  .report-btn {
+    color: var(--purple-dark);
+    background: var(--purple-light);
+  }
+
   &:hover .actions {
     visibility: visible;
   }

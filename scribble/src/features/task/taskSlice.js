@@ -8,6 +8,7 @@ import {
   hideLoading,
   getTeacherTasks,
   getSubmissions,
+  getAllTasks,
 } from "../viewTasks/viewTasksSlice";
 
 const initialState = {
@@ -181,6 +182,29 @@ export const gradeTask = createAsyncThunk(
   }
 );
 
+export const reviewTask = createAsyncThunk(
+  "task/reviewTask",
+  async (submission, thunkAPI) => {
+    try {
+      const { taskId, studentId } = submission;
+      const token = getObjectFromLocalStorage("token");
+      const data = {
+        task_id: taskId,
+        student_id: studentId,
+      };
+      const axiosConfig = {
+        headers: { Authorization: `Bearer ${token.access}` },
+      };
+
+      const resp = await customFetch.patch("/tasks/review/", data, axiosConfig);
+      thunkAPI.dispatch(getAllTasks());
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 export const updateScore = createAsyncThunk(
   "task/updateScore",
   async (submission, thunkAPI) => {
@@ -285,6 +309,17 @@ const taskSlice = createSlice({
       .addCase(gradeTask.rejected, (state, { payload }) => {
         state.isLoading = false;
         payload && toast.error(payload);
+      })
+      .addCase(reviewTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(reviewTask.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        if (payload.status === 200) toast.success("Requested for review");
+      })
+      .addCase(reviewTask.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload || "Unable to request review");
       })
       .addCase(updateScore.pending, (state) => {
         state.isLoading = true;

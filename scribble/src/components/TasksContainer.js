@@ -12,9 +12,10 @@ import {
 import PageBtnContainer from "./PageBtnContainer";
 import ModalWindow from "./ModalWindow";
 import DialogWindow from "./DialogWindow";
-import { deleteTask } from "../features/task/taskSlice";
+import { deleteTask, reviewTask } from "../features/task/taskSlice";
 import { deleteSubmission } from "../features/submission/submissionSlice";
 import SubmissionsWindow from "./SubmissionsWindow";
+import { getObjectFromLocalStorage } from "../utils/localStorage";
 
 const initialState = {
   selectedTask: null,
@@ -68,6 +69,13 @@ const TasksContainer = () => {
     if (values.type === "task") dispatch(deleteTask(values.selectedTask.id));
     else if (values.type === "submission")
       dispatch(deleteSubmission(values.selectedTask.id));
+    else if (values.type === "report")
+      dispatch(
+        reviewTask({
+          taskId: values.selectedTask.id,
+          studentId: getObjectFromLocalStorage("user").id,
+        })
+      );
     handleCloseDialog();
   };
 

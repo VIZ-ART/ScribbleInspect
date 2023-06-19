@@ -88,7 +88,7 @@ const DialogWindow = ({ isModalOpen, closeModal, successModal, modalText }) => {
           onMouseEnter={() => setSaveButtonHovered(true)}
           onMouseLeave={() => setSaveButtonHovered(false)}
         >
-          Delete
+          Confirm
         </button>
       </div>
     </Modal>

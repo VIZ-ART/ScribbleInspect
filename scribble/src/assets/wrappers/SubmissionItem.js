@@ -15,19 +15,7 @@ const Wrapper = styled.section`
       flex-basis: 0;
       text-align: center;
     }
-
-    /* button {
-      flex-grow: 0;
-      flex-basis: auto;
-      margin-right: 0.5rem;
-      color: var(--blue-dark);
-      background: var(--blue-light);
-      border: 0;
-      border-radius: 4px;
-      padding: 3px 30px;
-    } */
   }
-
   .odd {
     background-color: rgb(244 248 255);
     color: black;
@@ -76,6 +64,27 @@ const Wrapper = styled.section`
   .modify-btn:hover {
     background: var(--primary-700);
     box-shadow: var(--shadow-3);
+  }
+
+  .pending,
+  .ongoing {
+    color: #e9b949;
+  }
+  .submitted,
+  .completed {
+    color: #32cd32;
+  }
+  .missed {
+    color: #d9534f;
+  }
+  .graded {
+    color: #647acb;
+  }
+  .requested {
+    color: #666;
+  }
+  .reviewed {
+    color: #722ed1;
   }
 `;
 

@@ -205,6 +205,17 @@ const Task = ({
                     Result
                   </button>
                 )}
+              {!isTeacher && status === "graded" && (
+                <button
+                  type="button"
+                  className="btn report-btn"
+                  onClick={() => {
+                    openDialog(id, "report", "Report evaluation?");
+                  }}
+                >
+                  Report
+                </button>
+              )}
 
               {!isTeacher && status === "submitted" && (
                 <button
