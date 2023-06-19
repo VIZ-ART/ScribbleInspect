@@ -10,6 +10,7 @@ import {
   getTeacherTasks,
   changePage,
 } from "../features/viewTasks/viewTasksSlice";
+import { debounce } from "lodash";
 
 const SearchContainer = () => {
   const { isTeacher } = useSelector((store) => store.user);
@@ -26,17 +27,14 @@ const SearchContainer = () => {
     dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
   };
 
-  const debounce = useCallback(() => {
-    let timeoutID;
-    return (e) => {
-      setLocalSearch(e.target.value);
-      clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => {
-        dispatch(handleChange({ name: e.target.name, value: e.target.value }));
-        dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
-      }, 1000);
-    };
-  }, [dispatch, isTeacher, setLocalSearch]);
+  const handleChangeWithDebounce = useCallback(
+    debounce((name, value) => {
+      dispatch(handleChange({ name, value }));
+      dispatch(changePage(1));
+      dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
+    }, 1000),
+    [dispatch, isTeacher]
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +44,11 @@ const SearchContainer = () => {
     dispatch(isTeacher ? getTeacherTasks() : getAllTasks());
   };
 
-  const optimizedDebounce = debounce();
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setLocalSearch(value);
+    handleChangeWithDebounce(name, value);
+  };
 
   return (
     <Wrapper>
@@ -57,7 +59,7 @@ const SearchContainer = () => {
             type="text"
             name="search"
             value={localSearch}
-            handleChange={optimizedDebounce}
+            handleChange={handleInputChange}
           />
 
           <FormRowSelect
