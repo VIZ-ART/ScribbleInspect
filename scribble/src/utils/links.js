@@ -1,7 +1,6 @@
 import { IoBarChartSharp } from "react-icons/io5";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { FaWpforms } from "react-icons/fa";
-import { HiOutlineNewspaper } from "react-icons/hi";
 import { RiAttachment2 } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 
@@ -40,14 +39,6 @@ const links = [
   },
   {
     id: 5,
-    text: "results",
-    path: "/results",
-    icon: <HiOutlineNewspaper />,
-    forTeacher: false,
-    forStudent: false,
-  },
-  {
-    id: 6,
     text: "profile",
     path: "/profile",
     icon: <CgProfile />,

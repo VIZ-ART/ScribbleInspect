@@ -7,7 +7,6 @@ import {
   Profile,
   ViewTasks,
   AddTask,
-  Results,
   SharedLayout,
 } from "./pages/Dashboard";
 import SubmitTask from "./pages/Dashboard/SubmitTask";
@@ -28,7 +27,6 @@ function App() {
           <Route path="view-tasks" element={<ViewTasks />} />
           <Route path="add-task" element={<AddTask />} />
           <Route path="submit-task" element={<SubmitTask />} />
-          <Route path="results" element={<Results />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="landing" element={<Landing />} />

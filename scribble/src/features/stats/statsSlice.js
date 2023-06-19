@@ -10,14 +10,7 @@ const initialState = {
   requestedTasks: null,
   ongoingTasks: null,
   completedTasks: null,
-  prevResults: [
-    { date: "Jul 2021", count: 1 },
-    { date: "Aug 2021", count: 4 },
-    { date: "Sep 2021", count: 3 },
-    { date: "Oct 2021", count: 2 },
-    { date: "Nov 2021", count: 2 },
-    { date: "Dec 2021", count: 5 },
-  ],
+  prevResults: [],
 };
 
 export const getStats = createAsyncThunk(
@@ -58,6 +51,12 @@ const statsSlice = createSlice({
         state.requestedTasks = payload.requested_count || null;
         state.completedTasks = payload.completed_count || null;
         state.ongoingTasks = payload.ongoing_count || null;
+        state.prevResults = payload.graph_stats?.map((item) => {
+          return {
+            normalizedScore: item.normalized_score,
+            taskName: item.task_name,
+          };
+        });
       })
       .addCase(getStats.rejected, (state, { payload }) => {
         state.isLoading = false;

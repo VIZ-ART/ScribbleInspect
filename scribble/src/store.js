@@ -27,6 +27,7 @@ export const store = configureStore({
           "task/editTask/rejected",
           "submission/submitTask/fulfilled",
           "task/updateScore/fulfilled",
+          "task/gradeTask/fulfilled",
         ],
         // Ignore these field paths in all actions
         ignoredActionPaths: ["meta.arg", "payload.timestamp"],
