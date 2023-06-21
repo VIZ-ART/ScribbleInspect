@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "react-confetti": "^6.1.0",
-    "react-modal": "^3.16.1"
-  }
-}
